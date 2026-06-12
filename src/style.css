@@ -437,7 +437,7 @@ h1, h2, h3 {
 
 #result-ui {
     position: absolute;
-    bottom: 10%;
+    bottom: calc(60px + env(safe-area-inset-bottom) + 1rem);
     left: 50%;
     transform: translateX(-50%);
     text-align: center;

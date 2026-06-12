@@ -528,7 +528,6 @@ function showGalaxyDetails(partId) {
         jobsTitle.style.display = "none";
     }
 
-    document.getElementById("modal-message").innerHTML = `<p style="font-size:0.85rem;opacity:0.75;line-height:1.8;word-break:keep-all;margin:0;">북극성은 사람마다 크기가 다릅니다. 그 사람이 이 일을 얼마나 원하는지에 따라 크기가 결정됩니다. 북극성처럼 다른 것에 눈치 보지 말고 나만이 하고 싶은 길을 개척해나가세요!<br><br>제가 이 앱을 만든 이유는 많은 청소년들이 자신이 하고 싶은 것을 모르거나, 알지만 공부라는 벽에 의해 하지 못하는 것을 봐왔기 때문입니다. 북극성은 자신만의 길을 개척해 홀로 빛납니다. 여러분들도 공부 스트레스 받지 말고 꼭 하고 싶은 걸 하셨으면 좋겠습니다.</p>`;
     document.getElementById("modal-disclaimer").innerText = "추천 직업은 약간의 오차가 있을 수도 있습니다";
     document.getElementById("galaxy-modal").classList.add("active");
 }

@@ -114,16 +114,17 @@
         <!-- Galaxy Detail Modal -->
         <div id="galaxy-modal" class="modal-overlay">
             <div class="modal-content">
+                <button class="modal-back" onclick="closeModal()">←</button>
                 <button class="modal-close" onclick="closeModal()">×</button>
                 <div class="modal-body">
                     <h2 id="modal-galaxy-name">은하 이름</h2>
                     <p id="modal-tagline" style="font-style: italic; opacity: 0.8; margin-top: -1.5rem; margin-bottom: 2rem; font-size: 0.9rem; color: var(--accent-blue);">"태그라인"</p>
-                    
+
                     <div class="modal-info-section">
                         <h3>✨ 당신의 핵심 재능</h3>
                         <p id="modal-core">핵심 설명...</p>
                     </div>
-                    
+
                     <div class="modal-info-section">
                         <h3>🌟 당신이 빛나는 순간</h3>
                         <p id="modal-moment">순간 설명...</p>
@@ -133,6 +134,8 @@
                         <h3>🚀 추천 직업</h3>
                         <p id="modal-jobs" style="line-height: 1.8; word-break: keep-all; color: #fff;"></p>
                     </div>
+
+                    <div class="modal-info-section" id="modal-message" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;margin-top:8px;"></div>
                 </div>
                 <div class="modal-footer">
                     <p id="modal-disclaimer" style="font-size: 0.8rem; opacity: 0.6; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;"></p>

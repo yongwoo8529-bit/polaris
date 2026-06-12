@@ -173,7 +173,7 @@ async function showResult() {
                 overlay.classList.remove("active");
                 // INITIAL UI PHASE
                 document.getElementById("result-title").innerText = "당신만의 북극성이 만들어졌습니다!";
-                document.getElementById("result-desc").innerText = "북극성을 클릭해 터트리세요";
+                document.getElementById("result-desc").innerText = "북극성을 클릭해주세요 ✨";
                 document.getElementById("result-ui").classList.add("visible");
             }, 2000);
         }, 1000);
@@ -341,53 +341,9 @@ function explodeToGalaxies(specialType) {
         gsap.to(mainGalaxy.scale, { x: 1, y: 1, z: 1, duration: 5, ease: "power2.out" });
         gsap.fromTo(mainGalaxy.rotation, { y: 0 }, { y: Math.PI * 4, duration: 15, ease: "power3.out" });
 
-        document.getElementById("result-title").innerText = specialType === 'prism' ? "🌈 당신은 모든 빛을 품은 프리즘입니다!" : (specialType === 'silence' ? "🌑 당신의 우주는 지금 깊은 정적 속에 있습니다." : "당신만의 북극성이 나타났습니다!");
-        
-        const introText = `
-            <span style="font-size: 0.85em; opacity: 0.8; line-height: 1.6; display: block; margin-top: 1rem; text-align: left; background: rgba(255,255,255,0.05); padding: 1.2rem; border-radius: 10px;">
-                제가 이 앱을 만든 이유는 많은 청소년 어린이들이 자신들이 하고 싶은 것을 모르거나 알지만 공부라는 벽에 의해 하지 못하는 것을 봐왔기 때문입니다.<br>
-                북극성은 자신만의 길을 개척해 홀로 빛납니다. 여러분들도 공부 스트레스 받지 말고 꼭 하고 싶은 걸 하셨으면 좋겠습니다.
-            </span>
-        `;
-
-        let descHtml = "";
-        if (specialType === 'prism') {
-            descHtml = `
-                북극성은 모든 방향에서 빛나며 새로운 우주를 창조합니다.<br>
-                당신은 모든 가능성을 가진 축복받은 존재입니다.<br>
-                ${introText}
-                <div style="margin-top: 1.5rem; font-size: 0.85em; color: #26de81; font-weight: bold; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; line-height: 1.8;">
-                    ✨ 북극성을 클릭해 당신의 숨겨진 재능을 찾으세요!<br>
-                    ✨ 360도로 화면을 돌리며 자신이 만든 자신만의 북극성을 관찰하세요.
-                </div>
-            `;
-        } else if (specialType === 'silence') {
-            descHtml = `
-                가장 어두운 밤이 지나야 가장 밝은 새벽이 옵니다.<br>
-                지금의 고요함은 당신이 더 멀리 도약하기 위한 준비 단계일 뿐입니다.<br>
-                ${introText}
-                <div style="margin-top: 1.5rem; font-size: 0.85em; color: #26de81; font-weight: bold; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; line-height: 1.8;">
-                    ✨ 작은 빛을 클릭해 당신의 내면의 목소리를 들어보세요.<br>
-                    ✨ 360도로 화면을 돌리며 자신이 만든 자신만의 북극성을 관찰하세요.
-                </div>
-            `;
-        } else {
-            descHtml = `
-                북극성은 사람마다 크기가 다릅니다.<br>
-                그 사람이 이 일에 얼마나 원하는지에 따라 크기가 결정됩니다.<br>
-                북극성처럼 다른 것에 눈치 보지 말고 나만이 하고 싶은 길을 개척해나가세요!<br><br>
-                <span style="font-size: 0.85em; opacity: 0.8; line-height: 1.6; display: block; margin-top: 1rem;">
-                    제가 이 앱을 만든 이유는 많은 청소년 어린이들이 자신들이 하고 싶은 것을 모르거나 알지만 공부라는 벽에 의해 하지 못하는 것을 봐왔기 때문입니다.<br>
-                    북극성은 자신만의 길을 개척해 홀로 빛납니다. 여러분들도 공부 스트레스 받지 말고 꼭 하고 싶은 걸 하셨으면 좋겠습니다.
-                </span>
-                <div style="margin-top: 1.5rem; font-size: 0.85em; color: #4cd137; font-weight: bold; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
-                    ✨ 북극성을 클릭해 당신의 숨겨진 재능을 찾으세요!<br>
-                    ✨ 360도로 화면을 돌리며 자신이 만든 자신만의 북극성을 관찰하세요.
-                </div>
-            `;
-        }
-        
-        document.getElementById("result-desc").innerHTML = descHtml;
+        const titleMap = { prism: "🌈 모든 빛을 품은 프리즘 은하", silence: "🌑 깊은 정적의 은하" };
+        document.getElementById("result-title").innerText = titleMap[specialType] || "✨ 당신만의 은하가 탄생했습니다!";
+        document.getElementById("result-desc").innerText = "은하를 클릭해 당신의 진로를 탐색해보세요";
         document.getElementById("restart-btn").style.display = "inline-block";
         
         gsap.to(document.getElementById("result-ui"), { opacity: 1, duration: 1, delay: 1 });
@@ -572,7 +528,8 @@ function showGalaxyDetails(partId) {
         jobsTitle.style.display = "none";
     }
 
-    document.getElementById("modal-disclaimer").innerText = "추천 직업은 참고용입니다. POLARIS가 여러분의 진짜 내면을 발견하는 첫 걸음이 되길 바랍니다.";
+    document.getElementById("modal-message").innerHTML = `<p style="font-size:0.85rem;opacity:0.75;line-height:1.8;word-break:keep-all;margin:0;">북극성은 사람마다 크기가 다릅니다. 그 사람이 이 일을 얼마나 원하는지에 따라 크기가 결정됩니다. 북극성처럼 다른 것에 눈치 보지 말고 나만이 하고 싶은 길을 개척해나가세요!<br><br>제가 이 앱을 만든 이유는 많은 청소년들이 자신이 하고 싶은 것을 모르거나, 알지만 공부라는 벽에 의해 하지 못하는 것을 봐왔기 때문입니다. 북극성은 자신만의 길을 개척해 홀로 빛납니다. 여러분들도 공부 스트레스 받지 말고 꼭 하고 싶은 걸 하셨으면 좋겠습니다.</p>`;
+    document.getElementById("modal-disclaimer").innerText = "추천 직업은 약간의 오차가 있을 수도 있습니다";
     document.getElementById("galaxy-modal").classList.add("active");
 }
 

@@ -575,6 +575,21 @@ h1, h2, h3 {
     line-height: 1;
 }
 
+.modal-back {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.6rem;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+.modal-back:hover { opacity: 1; }
+
 .modal-body h2 {
     font-size: 1.8rem;
     margin-bottom: 2rem;

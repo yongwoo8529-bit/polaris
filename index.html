@@ -416,11 +416,19 @@
 <script>
 function copyEmail(e) {
     e.preventDefault();
-    navigator.clipboard.writeText('polarisfindream@gmail.com').then(() => {
+    const email = 'polarisfindream@gmail.com';
+    const showToast = () => {
         const t = document.getElementById('email-toast');
         t.style.display = 'block';
         setTimeout(() => { t.style.display = 'none'; }, 2500);
-    });
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(email).then(showToast).catch(() => {
+            prompt('이메일 주소를 복사하세요:', email);
+        });
+    } else {
+        prompt('이메일 주소를 복사하세요:', email);
+    }
 }
 </script>
 

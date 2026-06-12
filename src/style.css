@@ -617,11 +617,11 @@ h1, h2, h3 {
 
 @media (max-width: 600px) {
     .section {
-        justify-content: flex-start; /* 모바일에서는 위쪽부터 정렬하되 여백으로 조절 */
-        padding-top: 120px; /* 상단에서 더 멀어지게 하여 '땡겨진' 느낌 제거 */
+        justify-content: center;
+        padding-top: 80px;
     }
-    #landing h1 { font-size: 2.2rem; margin-top: 20px; }
-    #landing p { font-size: 1rem; margin-bottom: 2rem; }
+    #landing h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+    #landing p { font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.6; }
     .survey-card { padding: 1.5rem; margin-top: 10px; }
     #question-text { font-size: 1.1rem; min-height: 3.5rem; margin-bottom: 1.5rem; }
     .rating-options { gap: 6px; }

@@ -2,707 +2,483 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>POLARIS</title>
-    <!-- GSAP for smooth animations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POLARIS — 학교 진로교육 솔루션</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* [전역 디자인 시스템] */
         :root {
-            --bg-color: #040a18;
-            --accent-blue: #4080ff;
-            --accent-purple: #9060ff;
-            --accent-teal: #20c8a0;
-            --text-white: #ffffff;
-            --text-dim: #5a8ab0;
+            --bg: #040a18;
+            --card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.10);
+            --blue: #4080ff;
+            --purple: #9060ff;
+            --teal: #20c8a0;
+            --dim: rgba(255,255,255,0.55);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
         body {
-            background-color: var(--bg-color);
-            color: var(--text-white);
-            font-family: system-ui, -apple-system, sans-serif;
-            width: 100vw;
-            min-height: 100vh;
+            background: var(--bg);
+            color: #fff;
+            font-family: 'Noto Sans KR', system-ui, sans-serif;
             overflow-x: hidden;
-            overflow-y: auto; /* Enable scroll for content */
-            overscroll-behavior: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
-
-        /* [배경 시스템] */
-        .page-wrapper {
-            width: 100%;
-            max-width: 800px; /* Increased for desktop/text visibility */
-            min-height: 100vh;
-            position: relative;
-            background: url('bg-main.png') no-repeat center center;
-            background-size: cover;
-            background-attachment: fixed;
-            display: flex;
-            flex-direction: column;
+        .bg-glow {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background:
+                radial-gradient(ellipse at 15% 20%, rgba(64,128,255,0.07) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 75%, rgba(144,96,255,0.07) 0%, transparent 55%);
         }
+        section, nav, footer { position: relative; z-index: 1; }
 
-        .overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(4, 10, 24, 0.55);
-            z-index: 1;
+        /* ── NAV ── */
+        nav {
+            position: fixed; top:0; left:0; right:0; z-index:100;
+            height: 64px; padding: 0 5%;
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(4,10,24,0.88);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
         }
-
-        canvas#background-canvas {
-            position: absolute;
-            inset: 0;
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        /* [UI 레이아웃] */
-        .content-layer {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 100px 20px 40px;
-        }
-
-        /* [Navigation] */
-        .top-nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            max-width: 800px;
-            height: 70px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            z-index: 100;
-            background: rgba(4, 10, 24, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
         .nav-logo {
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: 900;
-            font-size: 20px;
-            letter-spacing: 2px;
-            color: #fff;
-            text-decoration: none;
+            font-family: 'Orbitron', monospace;
+            font-size: 17px; font-weight: 900; letter-spacing: 4px;
+            color: #fff; text-decoration: none;
         }
-
-        /* Nav Toggle Styles */
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            backdrop-filter: blur(5px);
-            transition: 0.3s;
+        .nav-right { display: flex; gap: 28px; align-items: center; }
+        .nav-right a {
+            color: var(--dim); text-decoration: none;
+            font-size: 14px; font-weight: 500; transition: color 0.2s;
         }
-
-        .nav-btn:hover { background: #fff; color: #000; }
-
-        .nav-overlay {
-            position: absolute;
-            top: 75px;
-            right: 20px;
-            width: calc(100% - 40px);
-            max-width: 280px;
-            background: rgba(10, 15, 30, 0.98);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 15px;
-            display: none;
-            z-index: 1000;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        .nav-right a:hover { color: #fff; }
+        .nav-cta {
+            background: var(--blue); color: #fff !important;
+            padding: 8px 20px; border-radius: 20px; font-weight: 700 !important;
         }
+        .nav-cta:hover { opacity: 0.85; }
+        @media (max-width:600px) { .nav-right { display:none; } }
 
-        .nav-overlay.active { display: flex; animation: slideDown 0.3s ease-out; }
+        /* ── LAYOUT ── */
+        .wrap { max-width: 1100px; margin: 0 auto; padding: 0 5%; }
 
-        .nav-menu-content {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            gap: 8px;
-        }
-
-        .menu-item {
-            color: #fff;
-            text-decoration: none;
-            padding: 14px;
-            font-size: 15px;
-            font-weight: 500;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            transition: all 0.2s;
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
             text-align: center;
-            display: block; /* Ensure full width */
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 120px 5% 80px;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(64,128,255,0.12);
+            border: 1px solid rgba(64,128,255,0.35);
+            color: var(--blue);
+            padding: 6px 18px; border-radius: 20px;
+            font-size: 12px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; margin-bottom: 32px;
+        }
+        .hero h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2rem, 6vw, 4.2rem);
+            font-weight: 900; line-height: 1.15; margin-bottom: 24px;
+            background: linear-gradient(135deg, #fff 0%, #a0c0ff 60%, #9060ff 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-sub {
+            font-size: clamp(0.95rem, 2vw, 1.2rem);
+            color: var(--dim); line-height: 1.8;
+            max-width: 580px; margin: 0 auto 44px;
+            word-break: keep-all;
+        }
+        .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+        .btn-primary {
+            background: var(--blue); color: #fff;
+            padding: 15px 34px; border-radius: 30px;
+            font-size: 15px; font-weight: 700; text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 22px rgba(64,128,255,0.4);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(64,128,255,0.55); }
+        .btn-outline {
+            background: transparent; color: #fff;
+            padding: 15px 34px; border-radius: 30px;
+            font-size: 15px; font-weight: 600; text-decoration: none;
+            border: 1px solid var(--border);
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .btn-outline:hover { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.05); }
+
+        /* ── STATS ── */
+        .stats {
+            padding: 60px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(4,1fr);
+            gap: 32px; text-align: center;
+        }
+        @media (max-width:700px) { .stats-grid { grid-template-columns: repeat(2,1fr); } }
+        .stat-num {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.4rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label { color: var(--dim); font-size: 13px; margin-top: 6px; }
+
+        /* ── FEATURES ── */
+        .features { padding: 110px 0; }
+        .sec-tag {
+            font-family: 'Orbitron', monospace;
+            font-size: 10px; letter-spacing: 3px; color: var(--blue);
+            text-transform: uppercase; margin-bottom: 14px;
+        }
+        .sec-title { font-size: clamp(1.5rem,4vw,2.2rem); font-weight: 700; margin-bottom: 14px; line-height: 1.3; }
+        .sec-sub {
+            color: var(--dim); font-size: 1rem; line-height: 1.8;
+            max-width: 480px; margin-bottom: 56px; word-break: keep-all;
+        }
+        .feat-grid {
+            display: grid; grid-template-columns: repeat(3,1fr); gap: 18px;
+        }
+        @media (max-width:800px) { .feat-grid { grid-template-columns: 1fr; } }
+        .feat-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 20px; padding: 30px;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .feat-card:hover { border-color: rgba(64,128,255,0.35); transform: translateY(-4px); }
+        .feat-icon { font-size: 2.2rem; margin-bottom: 18px; display: block; }
+        .feat-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
+        .feat-card p { color: var(--dim); font-size: 0.875rem; line-height: 1.75; word-break: keep-all; }
+        .feat-soon {
+            display: inline-block; margin-top: 14px;
+            background: rgba(144,96,255,0.14); border: 1px solid rgba(144,96,255,0.28);
+            color: #c090ff; font-size: 11px; padding: 3px 10px; border-radius: 10px;
         }
 
-        .menu-item:hover { 
-            background: rgba(40, 128, 255, 0.15); 
-            color: var(--accent-blue);
-            border-color: var(--accent-blue);
-            transform: scale(1.02);
+        /* ── COMPARISON ── */
+        .comparison { padding: 110px 0; }
+        .comp-wrap { overflow-x: auto; margin-top: 48px; }
+        .comp-table {
+            width: 100%; border-collapse: collapse; min-width: 500px;
         }
-
-        .nav-links {
-            display: flex;
-            gap: 15px;
+        .comp-table th, .comp-table td {
+            padding: 15px 22px; text-align: center;
+            border-bottom: 1px solid var(--border); font-size: 14px;
         }
-
-        .nav-links a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 500;
-            transition: color 0.3s;
+        .comp-table th:first-child, .comp-table td:first-child { text-align: left; }
+        .comp-table thead th {
+            font-family: 'Orbitron', monospace; font-size: 11px;
+            letter-spacing: 2px; color: var(--dim); padding-bottom: 18px;
         }
+        .comp-table thead th.hl { color: var(--blue); font-size: 13px; }
+        .comp-table td.yes { color: var(--teal); font-size: 16px; font-weight: 700; }
+        .comp-table td.no { color: rgba(255,255,255,0.2); font-size: 16px; }
+        .comp-table tr:hover td { background: rgba(255,255,255,0.02); }
 
-        .nav-links a:hover {
-            color: var(--accent-blue);
+        /* ── PRICING ── */
+        .pricing { padding: 110px 0; }
+        .price-grid {
+            display: grid; grid-template-columns: repeat(3,1fr);
+            gap: 18px; margin-top: 56px;
         }
-
-        /* 행성 오브젝트 섹션 */
-        .planet-section {
-            margin-top: 20px;
+        @media (max-width:800px) { .price-grid { grid-template-columns: 1fr; max-width: 380px; margin: 56px auto 0; } }
+        .price-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 24px; padding: 34px;
+            transition: transform 0.3s;
+        }
+        .price-card.featured {
+            border-color: var(--blue);
+            background: rgba(64,128,255,0.07);
             position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
         }
-
-        .planet-orb {
-            width: 120px;
-            height: 120px;
-            background: url('interactive-planet.png') no-repeat center center;
-            background-size: contain;
-            border-radius: 50%;
-            filter: drop-shadow(0 0 20px var(--accent-blue));
-            z-index: 5;
-            transition: transform 0.2s;
+        .price-card.featured::before {
+            content: '추천';
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            background: var(--blue); color: #fff;
+            font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 10px;
         }
-
-        .planet-orb:active {
-            transform: scale(0.9);
+        .price-card:hover { transform: translateY(-4px); }
+        .price-tier { font-size: 12px; color: var(--dim); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+        .price-amount { font-family: 'Orbitron', monospace; font-size: 1.9rem; font-weight: 900; margin-bottom: 4px; }
+        .price-unit { font-size: 12px; color: var(--dim); margin-bottom: 28px; }
+        .price-list { list-style: none; margin-bottom: 28px; }
+        .price-list li {
+            font-size: 13px; padding: 8px 0;
+            border-bottom: 1px solid var(--border); color: var(--dim);
+            display: flex; align-items: center; gap: 10px;
         }
-
-        /* 위성 공전 효과 */
-        .satellite-orbit {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 180px;
-            height: 180px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            pointer-events: none;
+        .price-list li::before { content: '✓'; color: var(--teal); font-weight: 700; min-width: 12px; }
+        .price-list li.off { text-decoration: line-through; opacity: 0.35; }
+        .price-list li.off::before { content: '—'; color: var(--dim); }
+        .btn-plan {
+            display: block; width: 100%; padding: 13px;
+            text-align: center; border-radius: 12px;
+            font-size: 14px; font-weight: 700; cursor: pointer;
+            transition: all 0.2s; text-decoration: none;
         }
-
-        .satellite {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: radial-gradient(circle, #fff, var(--accent-blue));
-            border-radius: 50%;
-            top: -6px;
-            left: calc(50% - 6px);
-            box-shadow: 0 0 10px var(--accent-blue);
-            animation: orbit 8s linear infinite;
+        .btn-plan-ghost { border: 1px solid var(--border); color: #fff; background: transparent; }
+        .btn-plan-ghost:hover { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.05); }
+        .btn-plan-fill {
+            background: var(--blue); color: #fff; border: none;
+            box-shadow: 0 4px 20px rgba(64,128,255,0.3);
         }
+        .btn-plan-fill:hover { box-shadow: 0 8px 30px rgba(64,128,255,0.5); transform: translateY(-1px); }
 
-        @keyframes orbit {
-            from { transform: rotate(0deg) translateX(90px) rotate(0deg); }
-            to { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
+        /* ── CTA ── */
+        .cta-section { padding: 110px 0; text-align: center; }
+        .cta-box {
+            background: linear-gradient(135deg, rgba(64,128,255,0.10), rgba(144,96,255,0.10));
+            border: 1px solid rgba(64,128,255,0.22);
+            border-radius: 32px; padding: 80px 40px;
         }
+        .cta-box h2 { font-size: clamp(1.4rem,4vw,2.4rem); font-weight: 700; margin-bottom: 14px; line-height: 1.3; word-break: keep-all; }
+        .cta-box p { color: var(--dim); font-size: 1rem; margin-bottom: 40px; word-break: keep-all; }
 
-        .click-hint {
-            margin-top: 15px;
-            font-size: 11px;
-            color: var(--accent-blue);
-            letter-spacing: 1px;
-            opacity: 0.8;
-            animation: text-pulse 2s infinite;
+        /* ── FOOTER ── */
+        footer { padding: 60px 5% 40px; border-top: 1px solid var(--border); }
+        .footer-inner {
+            max-width: 1100px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: flex-start;
+            gap: 40px; flex-wrap: wrap;
         }
-
-        @keyframes text-pulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
-        }
-
-        /* 타이틀 블록 */
-        .title-block {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .main-title {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: 8px;
-            color: #fff;
-            text-shadow: 0 0 15px var(--accent-blue);
-            margin-bottom: 8px;
-        }
-
-        .sub-title {
-            font-size: 11px;
-            color: var(--text-dim);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-
-        /* 메뉴 카드 */
-        .menu-container {
-            margin-top: auto;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .menu-card {
-            position: relative;
-            padding: 24px 20px;
-            backdrop-filter: blur(12px);
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 16px;
-            overflow: hidden;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .menu-card:active {
-            transform: scale(0.97);
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--theme-color);
-            box-shadow: 0 0 20px var(--theme-color-glow);
-        }
-
-        .dest-label {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 9px;
-            color: var(--theme-color);
-            margin-bottom: 8px;
-            font-weight: 900;
-        }
-
-        .menu-name {
-            font-size: 16px;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .tag-label {
-            font-size: 8px;
-            font-family: 'Courier New', Courier, monospace;
-            opacity: 0.5;
-            position: absolute;
-            bottom: 8px;
-            right: 12px;
-        }
-
-        .glow-circle {
-            position: absolute;
-            right: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 60px;
-            height: 60px;
-            background: var(--theme-color);
-            filter: blur(40px);
-            opacity: 0.3;
-            pointer-events: none;
-        }
-
-        /* 스크롤 유도 */
-        .scroll-hint {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-top: 30px;
-        }
-
-        .dot {
-            width: 3px;
-            height: 3px;
-            background: #fff;
-            border-radius: 50%;
-            opacity: 0.2;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 1; }
-        }
-
-        .dot:nth-child(1) { animation: blink 1.5s infinite 0s; }
-        .dot:nth-child(2) { animation: blink 1.5s infinite 0.2s; }
-        .dot:nth-child(3) { animation: blink 1.5s infinite 0.4s; }
-
-        /* [Footer] */
-        .main-footer {
-            width: 100%;
-            padding: 60px 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            z-index: 10;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .footer-col h4 {
-            font-size: 14px;
-            margin-bottom: 20px;
-            color: var(--accent-blue);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .footer-col ul {
-            list-style: none;
-        }
-
-        .footer-col li {
-            margin-bottom: 10px;
-        }
-
-        .footer-col a {
-            color: rgba(255, 255, 255, 0.5);
-            text-decoration: none;
-            font-size: 13px;
-            transition: color 0.3s;
-        }
-
-        .footer-col a:hover {
-            color: #fff;
-        }
-
+        .footer-brand .ft-logo { font-family: 'Orbitron', monospace; font-size: 18px; font-weight: 900; letter-spacing: 4px; }
+        .footer-brand p { font-size: 13px; color: var(--dim); margin-top: 8px; line-height: 1.7; }
+        .footer-links { display: flex; flex-direction: column; gap: 10px; }
+        .footer-links a { color: var(--dim); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+        .footer-links a:hover { color: #fff; }
         .footer-bottom {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.3);
+            max-width: 1100px; margin: 36px auto 0;
+            padding-top: 22px; border-top: 1px solid var(--border);
+            font-size: 12px; color: var(--dim);
         }
-
-        /* 텍스트 콘텐츠 보강 */
-        .intro-text-block {
-            margin: 40px 0;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            text-align: left;
-        }
-
-        .intro-text-block p {
-            font-size: 14px;
-            line-height: 1.8;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 15px;
-        }
-
-        #particle-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 20;
-            pointer-events: none;
-        }
-
     </style>
 </head>
 <body>
-    <div class="page-wrapper">
-        <nav class="top-nav">
-            <a href="index.html" class="nav-logo">POLARIS</a>
-            <button id="nav-toggle" class="nav-btn">NAVIGATE</button>
-            
-            <div id="nav-menu" class="nav-overlay">
-                <div class="nav-menu-content">
-                    <a href="results-guide.html" class="menu-item">은하계 가이드</a>
-                    <a href="polaris.html" class="menu-item">나만의 북극성 찾기</a>
-                </div>
-            </div>
-        </nav>
+<div class="bg-glow"></div>
 
-        <div class="overlay"></div>
-        <canvas id="background-canvas"></canvas>
-        <canvas id="particle-overlay"></canvas>
-
-        <main class="content-layer">
-
-            <!-- 행성 오브젝트 -->
-            <div class="planet-section" onclick="burstPlanet(event)">
-                <div class="satellite-orbit">
-                    <div class="satellite"></div>
-                </div>
-                <div class="planet-orb" id="main-planet"></div>
-                <div class="click-hint">메인 화면 성운을 클릭해보세요</div>
-            </div>
-
-            <!-- 타이틀 -->
-            <div class="title-block">
-                <h1 class="main-title">POLARIS</h1>
-                <p class="sub-title">어느 여정으로 떠나시겠습니까?</p>
-            </div>
-
-            <div class="intro-text-block">
-                <p>
-                    <strong>POLARIS 프로젝트</strong>는 급변하는 현대 사회 속에서 청소년들이 자신의 진정한 가치를 발견하고, 남들의 시선이 아닌 자신만의 내면의 목소리에 귀를 기울일 수 있도록 돕기 위해 시작되었습니다.
-                </p>
-                <p>
-                    우리는 각자가 하나의 고유한 은하계와 같다고 믿습니다. 어떤 이는 탐구의 빛이 강하고, 어떤 이는 공감과 온기의 에너지가 넘칩니다. POLARIS는 여러분의 이러한 고유한 성향을 '우주적 관점'에서 분석하고 시각화하여, 스스로가 얼마나 눈부신 존재인지 깨닫게 해줍니다.
-                </p>
-                <p>
-                    단순한 심리 테스트를 넘어, Three.js 기반의 환상적인 3D 인터랙션을 통해 여러분의 내면 세계를 체험해 보세요. 북극성이 길을 잃은 여행자들의 지표가 되듯, POLARIS가 여러분의 꿈을 향한 여정의 이정표가 되어드릴 것입니다.
-                </p>
-            </div>
-
-            <div class="menu-container">
-                <a href="polaris.html" class="menu-card" style="--theme-color: #9060ff; --theme-color-glow: rgba(144, 96, 255, 0.4);">
-                    <span class="dest-label">DEST.01</span>
-                    <span class="menu-name">나만의 북극성 찾기</span>
-                    <span class="tag-label">[POLARIS MATRIX]</span>
-                    <div class="glow-circle"></div>
-                </a>
-
-                <a href="results-guide.html" class="menu-card" style="--theme-color: #20c8a0; --theme-color-glow: rgba(32, 200, 160, 0.4);">
-                    <span class="dest-label">DEST.02</span>
-                    <span class="menu-name">은하계 가이드</span>
-                    <span class="tag-label">[GALAXY GUIDE]</span>
-                    <div class="glow-circle"></div>
-                </a>
-            </div>
-        </main>
-
-        <footer class="main-footer">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h4>Navigate</h4>
-                    <ul>
-                        <li><a href="index.html">홈으로</a></li>
-                        <li><a href="results-guide.html">은하계 가이드</a></li>
-                        <li><a href="polaris.html">나만의 북극성 찾기</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="privacy.html">개인정보 처리방침</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                &copy; 2024 POLARIS PROJECT. All Rights Reserved.
-            </div>
-        </footer>
+<!-- NAV -->
+<nav>
+    <a href="index.html" class="nav-logo">POLARIS</a>
+    <div class="nav-right">
+        <a href="#features">기능 소개</a>
+        <a href="#pricing">가격</a>
+        <a href="polaris.html">학생 체험</a>
+        <a href="mailto:yongwoo8529@gmail.com" class="nav-cta">도입 문의</a>
     </div>
+</nav>
 
-    <script>
-        const bgCanvas = document.getElementById('background-canvas');
-        const bgCtx = bgCanvas.getContext('2d');
-        let width, height;
+<!-- HERO -->
+<section class="hero">
+    <span class="hero-badge">🎓 학교 진로교육 전용 플랫폼</span>
+    <h1>진로교육을<br>3D로 경험하다</h1>
+    <p class="hero-sub">
+        20문항 검사 후 Three.js 3D 우주 시각화로<br>
+        학생이 직접 발견하는 자신만의 진로 은하.<br>
+        자유학기제 · 진로교육 수업에 즉시 활용 가능합니다.
+    </p>
+    <div class="hero-btns">
+        <a href="polaris.html" class="btn-primary">무료 체험하기</a>
+        <a href="mailto:yongwoo8529@gmail.com" class="btn-outline">📧 도입 문의</a>
+    </div>
+</section>
 
-        const stars = [];
-        const meteors = [];
+<!-- STATS -->
+<section class="stats">
+    <div class="wrap">
+        <div class="stats-grid">
+            <div><div class="stat-num">20</div><div class="stat-label">문항 검사</div></div>
+            <div><div class="stat-num">5+</div><div class="stat-label">진로 성향 유형</div></div>
+            <div><div class="stat-num">3D</div><div class="stat-label">인터랙티브 시각화</div></div>
+            <div><div class="stat-num">📱</div><div class="stat-label">모바일 전용 앱</div></div>
+        </div>
+    </div>
+</section>
 
-        function resize() {
-            width = bgCanvas.width = window.innerWidth;
-            height = bgCanvas.height = window.innerHeight;
-        }
+<!-- FEATURES -->
+<section class="features" id="features">
+    <div class="wrap">
+        <p class="sec-tag">Features</p>
+        <h2 class="sec-title">기존 진로검사와 다릅니다</h2>
+        <p class="sec-sub">
+            학생들이 스스로 몰입하는 진로탐색 경험.<br>
+            텍스트 결과지가 아닌 인터랙티브 3D 우주로 결과를 시각화합니다.
+        </p>
+        <div class="feat-grid">
+            <div class="feat-card">
+                <span class="feat-icon">🌌</span>
+                <h3>3D 진로 은하 시각화</h3>
+                <p>검사 완료 후 Three.js 3D 인터랙션으로 자신의 성향이 은하계로 펼쳐집니다. 학생들이 자발적으로 공유하고 싶어하는 결과 화면.</p>
+            </div>
+            <div class="feat-card">
+                <span class="feat-icon">🔭</span>
+                <h3>5가지 진로 성향 분석</h3>
+                <p>탐구 · 질서 · 온기 · 울림 · 울타리의 은하. 단순 유형 분류를 넘어 추천 직업군 20개와 핵심 재능을 함께 제시합니다.</p>
+            </div>
+            <div class="feat-card">
+                <span class="feat-icon">📊</span>
+                <h3>교사 관리 대시보드</h3>
+                <p>학급별 학생 검사 현황, 성향 유형 통계, 결과 내보내기. 진로교사가 수업에 바로 활용할 수 있는 관리 도구.</p>
+                <span class="feat-soon">출시 예정</span>
+            </div>
+            <div class="feat-card">
+                <span class="feat-icon">📄</span>
+                <h3>결과 PDF 보고서</h3>
+                <p>학생 · 학부모 상담에 활용할 수 있는 인쇄용 보고서 자동 생성. 진로상담 자료로 즉시 사용 가능합니다.</p>
+                <span class="feat-soon">출시 예정</span>
+            </div>
+            <div class="feat-card">
+                <span class="feat-icon">📱</span>
+                <h3>모바일 전용 앱</h3>
+                <p>별도 앱 설치 없이 스마트폰 브라우저에서 네이티브 앱처럼 동작. 수업 시간에 학생 스마트폰으로 바로 진행 가능.</p>
+            </div>
+            <div class="feat-card">
+                <span class="feat-icon">🏫</span>
+                <h3>학교 단위 계정</h3>
+                <p>학교 코드로 교사 가입 → 학급 생성 → 초대 코드로 학생 참여. 복잡한 설정 없이 5분 안에 수업 준비 완료.</p>
+                <span class="feat-soon">출시 예정</span>
+            </div>
+        </div>
+    </div>
+</section>
 
-        class Star {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.size = 0.5 + Math.random() * 1.5;
-                this.opacity = 0.2 + Math.random() * 0.8;
-                this.blinkSpeed = 0.005 + Math.random() * 0.01;
-            }
+<!-- COMPARISON -->
+<section class="comparison">
+    <div class="wrap">
+        <p class="sec-tag">Comparison</p>
+        <h2 class="sec-title">커리어넷과 무엇이 다른가요?</h2>
+        <div class="comp-wrap">
+            <table class="comp-table">
+                <thead>
+                    <tr>
+                        <th>비교 항목</th>
+                        <th>커리어넷</th>
+                        <th class="hl">POLARIS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>결과 시각화</td>
+                        <td class="no">✗ 텍스트 보고서</td>
+                        <td class="yes">✓ 3D 인터랙티브</td>
+                    </tr>
+                    <tr>
+                        <td>모바일 최적화</td>
+                        <td class="no">✗ PC 중심</td>
+                        <td class="yes">✓ 모바일 전용</td>
+                    </tr>
+                    <tr>
+                        <td>학생 몰입도</td>
+                        <td class="no">✗ 낮음</td>
+                        <td class="yes">✓ 게임처럼 높음</td>
+                    </tr>
+                    <tr>
+                        <td>즉시 수업 활용</td>
+                        <td class="yes">✓</td>
+                        <td class="yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>진로교육법 연계</td>
+                        <td class="yes">✓</td>
+                        <td class="yes">✓</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
-            draw() {
-                this.opacity += this.blinkSpeed;
-                if (this.opacity > 1 || this.opacity < 0.2) this.blinkSpeed *= -1;
-                bgCtx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-                bgCtx.beginPath();
-                bgCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                bgCtx.fill();
-            }
-        }
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+    <div class="wrap">
+        <p class="sec-tag">Pricing</p>
+        <h2 class="sec-title">합리적인 학교 구독 플랜</h2>
+        <p class="sec-sub">
+            학교 단위 구독으로 학생 수 제한 없이 사용하세요.<br>
+            교육청 납품 · 대량 계약은 별도 문의 주세요.
+        </p>
+        <div class="price-grid">
+            <div class="price-card">
+                <div class="price-tier">Free</div>
+                <div class="price-amount">무료</div>
+                <div class="price-unit">학생 30명 / 월</div>
+                <ul class="price-list">
+                    <li>20문항 진로 검사</li>
+                    <li>3D 은하 시각화</li>
+                    <li>5가지 성향 유형</li>
+                    <li class="off">교사 대시보드</li>
+                    <li class="off">PDF 보고서</li>
+                </ul>
+                <a href="polaris.html" class="btn-plan btn-plan-ghost">무료 체험하기</a>
+            </div>
+            <div class="price-card featured">
+                <div class="price-tier">Standard</div>
+                <div class="price-amount">30만원</div>
+                <div class="price-unit">학교당 / 월 · 학생 무제한</div>
+                <ul class="price-list">
+                    <li>20문항 진로 검사</li>
+                    <li>3D 은하 시각화</li>
+                    <li>5가지 성향 유형</li>
+                    <li>교사 대시보드</li>
+                    <li class="off">PDF 보고서</li>
+                </ul>
+                <a href="mailto:yongwoo8529@gmail.com" class="btn-plan btn-plan-fill">도입 문의하기</a>
+            </div>
+            <div class="price-card">
+                <div class="price-tier">Premium</div>
+                <div class="price-amount">50만원</div>
+                <div class="price-unit">학교당 / 월 · 모든 기능</div>
+                <ul class="price-list">
+                    <li>20문항 진로 검사</li>
+                    <li>3D 은하 시각화</li>
+                    <li>5가지 성향 유형</li>
+                    <li>교사 대시보드</li>
+                    <li>PDF 보고서</li>
+                </ul>
+                <a href="mailto:yongwoo8529@gmail.com" class="btn-plan btn-plan-ghost">도입 문의하기</a>
+            </div>
+        </div>
+    </div>
+</section>
 
-        class Meteor {
-            constructor() {
-                this.init();
-            }
+<!-- CTA -->
+<section class="cta-section">
+    <div class="wrap">
+        <div class="cta-box">
+            <h2>지금 바로 학생들에게<br>보여주세요</h2>
+            <p>설치 없이 링크 하나로 시작. 무료 체험으로 수업 활용 가능성을 직접 확인하세요.</p>
+            <div class="hero-btns">
+                <a href="polaris.html" class="btn-primary">무료 체험 시작</a>
+                <a href="mailto:yongwoo8529@gmail.com" class="btn-outline">📧 도입 문의</a>
+            </div>
+        </div>
+    </div>
+</section>
 
-            init() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height * 0.5;
-                this.len = 20 + Math.random() * 50;
-                this.speed = 3 + Math.random() * 10;
-                this.opacity = 1;
-            }
+<!-- FOOTER -->
+<footer>
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <div class="ft-logo">POLARIS</div>
+            <p>학교 진로교육 솔루션<br>문의: yongwoo8529@gmail.com</p>
+        </div>
+        <div class="footer-links">
+            <a href="polaris.html">학생 체험하기</a>
+            <a href="results-guide.html">은하계 가이드</a>
+            <a href="privacy.html">개인정보 처리방침</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2025 POLARIS. All Rights Reserved.
+    </div>
+</footer>
 
-            draw() {
-                this.x += this.speed;
-                this.y += this.speed;
-                this.opacity -= 0.02;
-
-                if (this.opacity <= 0) return false;
-
-                bgCtx.strokeStyle = `rgba(255, 255, 255, ${this.opacity})`;
-                bgCtx.lineWidth = 1;
-                bgCtx.beginPath();
-                bgCtx.moveTo(this.x, this.y);
-                bgCtx.lineTo(this.x - this.len, this.y - this.len);
-                bgCtx.stroke();
-                return true;
-            }
-        }
-
-        function initBG() {
-            resize();
-            for (let i = 0; i < 180; i++) stars.push(new Star());
-            setInterval(() => {
-                if (meteors.length < 3) meteors.push(new Meteor());
-            }, 3000);
-        }
-
-        function animateBG() {
-            bgCtx.clearRect(0, 0, width, height);
-            stars.forEach(s => s.draw());
-            for (let i = meteors.length - 1; i >= 0; i--) {
-                if (!meteors[i].draw()) meteors.splice(i, 1);
-            }
-            requestAnimationFrame(animateBG);
-        }
-
-        const pCanvas = document.getElementById('particle-overlay');
-        const pCtx = pCanvas.getContext('2d');
-        let particles = [];
-        let isBursting = false;
-
-        function burstPlanet(e) {
-            if (isBursting) return;
-            isBursting = true;
-
-            const rect = document.getElementById('main-planet').getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-
-            gsap.to("#main-planet", { opacity: 0, scale: 2, duration: 0.4 });
-
-            for (let i = 0; i < 100; i++) {
-                particles.push({
-                    x: centerX,
-                    y: centerY,
-                    vx: (Math.random() - 0.5) * 20,
-                    vy: (Math.random() - 0.5) * 20,
-                    size: 1 + Math.random() * 3,
-                    color: i % 3 === 0 ? '#4080ff' : '#ffffff',
-                    opacity: 1
-                });
-            }
-
-            // Burst then Gather
-            gsap.to({}, {
-                duration: 2.2,
-                onUpdate: function() {
-                    const p = this.progress();
-                    if (p < 0.4) {
-                        particles.forEach(pt => {
-                            pt.x += pt.vx;
-                            pt.y += pt.vy;
-                            pt.vx *= 0.96;
-                            pt.vy *= 0.96;
-                        });
-                    } else {
-                        particles.forEach(pt => {
-                            pt.x += (centerX - pt.x) * (p * 0.15);
-                            pt.y += (centerY - pt.y) * (p * 0.15);
-                        });
-                    }
-                },
-                onComplete: () => {
-                    particles = [];
-                    isBursting = false;
-                    gsap.to("#main-planet", { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" });
-                }
-            });
-        }
-
-        function animateParticles() {
-            pCanvas.width = window.innerWidth;
-            pCanvas.height = window.innerHeight;
-            pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
-            particles.forEach(p => {
-                pCtx.globalAlpha = p.opacity;
-                pCtx.fillStyle = p.color;
-                pCtx.beginPath();
-                pCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                pCtx.fill();
-            });
-            requestAnimationFrame(animateParticles);
-        }
-
-        window.addEventListener('resize', resize);
-        initBG();
-        animateBG();
-        animateParticles();
-    </script>
-    <script>
-        const navToggle = document.getElementById('nav-toggle');
-        const navMenu = document.getElementById('nav-menu');
-
-        navToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            navMenu.classList.toggle('active');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!navMenu.contains(e.target) && navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
-            }
-        });
-
-        // Close menu when clicking items
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-            });
-        });
-    </script>
 </body>
 </html>

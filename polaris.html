@@ -45,7 +45,6 @@
     <div class="app-container">
         <header class="nav" style="position: relative; z-index: 1000; pointer-events: all;">
             <div class="logo" onclick="location.href='index.html'" style="cursor: pointer; pointer-events: all;">POLARIS</div>
-            <a href="index.html" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.9rem; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; pointer-events: all;">BACK TO STATION</a>
         </header>
 
         <!-- Section 1: Landing -->
@@ -146,6 +145,22 @@
             <h2 id="creation-text">당신의 내면의 북극성이 만들어집니다...</h2>
         </div>
     </div>
+
+    <!-- 하단 탭 내비게이션 -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="tab-item">
+            <span class="tab-icon">🏠</span>
+            <span class="tab-label">홈</span>
+        </a>
+        <a href="polaris.html" class="tab-item active">
+            <span class="tab-icon">⭐</span>
+            <span class="tab-label">검사</span>
+        </a>
+        <a href="results-guide.html" class="tab-item">
+            <span class="tab-icon">🌌</span>
+            <span class="tab-label">가이드</span>
+        </a>
+    </nav>
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>

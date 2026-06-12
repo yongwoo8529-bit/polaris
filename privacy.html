@@ -16,8 +16,8 @@
             line-height: 1.8;
         }
         .container {
-            max-width: 800px;
-            margin: 120px auto 80px;
+            max-width: 430px;
+            margin: 76px auto 80px;
             padding: 40px;
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(15px);
@@ -63,15 +63,15 @@
             position: fixed;
             top: 0;
             width: 100%;
-            max-width: 800px;
-            height: 70px;
+            max-width: 430px;
+            height: 56px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             padding: 0 20px;
             z-index: 100;
-            background: rgba(4, 10, 24, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(4, 10, 24, 0.88);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             left: 50%;
             transform: translateX(-50%);
@@ -80,43 +80,16 @@
         .nav-logo {
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
-            font-size: 20px;
+            font-size: 18px;
             letter-spacing: 2px;
             color: #fff;
             text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 15px;
-        }
-
-        .nav-links a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-size: 13px;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #4080ff;
-        }
-
-        .nav-links a.active {
-            color: #fff;
-            font-weight: 700;
         }
     </style>
 </head>
 <body>
     <nav class="top-nav">
         <a href="index.html" class="nav-logo">POLARIS</a>
-        <div class="nav-links">
-            <a href="index.html"></a>
-            <a href="results-guide.html"></a>
-            <a href="polaris.html"></a>
-            <a href="privacy.html" class="active"></a>
-        </div>
     </nav>
     
     <div class="container">
@@ -154,5 +127,21 @@
 
         <a href="index.html" class="footer-link">메뉴로 돌아가기</a>
     </div>
+
+    <!-- 하단 탭 내비게이션 -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="tab-item">
+            <span class="tab-icon">🏠</span>
+            <span class="tab-label">홈</span>
+        </a>
+        <a href="polaris.html" class="tab-item">
+            <span class="tab-icon">⭐</span>
+            <span class="tab-label">검사</span>
+        </a>
+        <a href="results-guide.html" class="tab-item">
+            <span class="tab-icon">🌌</span>
+            <span class="tab-label">가이드</span>
+        </a>
+    </nav>
 </body>
 </html>

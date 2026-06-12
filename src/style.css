@@ -79,13 +79,49 @@ h1, h2, h3 {
 
 .app-container {
     width: 100%;
+    max-width: 430px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
     z-index: 10;
+    margin: 0 auto;
 }
+
+/* ── 하단 탭 내비게이션 ── */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 430px;
+    height: 60px;
+    background: rgba(4, 10, 24, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255,255,255,0.10);
+    display: flex;
+    z-index: 1000;
+    padding-bottom: env(safe-area-inset-bottom);
+}
+.tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: rgba(255,255,255,0.40);
+    gap: 3px;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+}
+.tab-item.active { color: #ffffff; }
+.tab-item:active { color: rgba(255,255,255,0.7); }
+.tab-icon { font-size: 19px; line-height: 1; }
+.tab-label { font-size: 10px; font-family: system-ui, sans-serif; letter-spacing: 0.3px; }
 
 /* Navbar */
 .nav {

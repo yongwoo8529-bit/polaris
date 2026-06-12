@@ -24,15 +24,15 @@
             position: fixed;
             top: 0;
             width: 100%;
-            max-width: 800px;
-            height: 70px;
+            max-width: 430px;
+            height: 56px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             padding: 0 20px;
             z-index: 100;
-            background: rgba(4, 10, 24, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(4, 10, 24, 0.88);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             left: 50%;
             transform: translateX(-50%);
@@ -65,7 +65,7 @@
 
         /* [Header] */
         .page-header {
-            margin-top: 120px;
+            margin-top: 80px;
             text-align: center;
             padding: 0 20px;
         }
@@ -91,11 +91,11 @@
 
         /* [Galaxy Grid] */
         .galaxy-grid {
-            max-width: 900px;
+            max-width: 430px;
             width: 95%;
             margin: 40px auto 100px;
             display: grid;
-            gap: 40px;
+            gap: 24px;
         }
 
         .galaxy-card {
@@ -203,8 +203,8 @@
         /* [Footer] */
         .main-footer {
             width: 100%;
-            max-width: 800px;
-            padding: 60px 20px;
+            max-width: 430px;
+            padding: 40px 20px 80px;
             background: rgba(0, 0, 0, 0.5);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             z-index: 10;
@@ -249,13 +249,6 @@
 <body>
     <nav class="top-nav">
         <a href="index.html" class="nav-logo">POLARIS</a>
-        <button id="nav-toggle" class="nav-btn">NAVIGATE</button>
-        <div id="nav-menu" class="nav-overlay">
-            <div class="nav-menu-content">
-                <a href="results-guide.html" class="menu-item">은하계 가이드</a>
-                <a href="polaris.html" class="menu-item">나만의 북극성 찾기</a>
-            </div>
-        </div>
     </nav>
 
     <canvas id="stars-bg"></canvas>
@@ -413,6 +406,22 @@
         </div>
     </footer>
 
+    <!-- 하단 탭 내비게이션 -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="tab-item">
+            <span class="tab-icon">🏠</span>
+            <span class="tab-label">홈</span>
+        </a>
+        <a href="polaris.html" class="tab-item">
+            <span class="tab-icon">⭐</span>
+            <span class="tab-label">검사</span>
+        </a>
+        <a href="results-guide.html" class="tab-item active">
+            <span class="tab-icon">🌌</span>
+            <span class="tab-label">가이드</span>
+        </a>
+    </nav>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const canvas = document.getElementById('stars-bg');
@@ -456,12 +465,6 @@
             }
             animate();
         }
-    </script>
-    <script>
-        const nt = document.getElementById('nav-toggle');
-        const nm = document.getElementById('nav-menu');
-        nt.addEventListener('click', (e) => { e.stopPropagation(); nm.classList.toggle('active'); });
-        document.addEventListener('click', (e) => { if (!nm.contains(e.target)) nm.classList.remove('active'); });
     </script>
 </body>
 </html>

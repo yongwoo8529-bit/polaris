@@ -11,7 +11,8 @@ export default defineConfig({
         privacy: resolve(__dirname, 'privacy.html'),
         board: resolve(__dirname, 'board.html'),
         results_guide: resolve(__dirname, 'results-guide.html'),
-        job: resolve(__dirname, 'job.html')
+        job: resolve(__dirname, 'job.html'),
+        jobs: resolve(__dirname, 'jobs.html')
       }
     }
   }

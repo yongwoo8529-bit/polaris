@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>직업 탐색 - POLARIS</title>
+    <meta name="description" content="나의 은하 유형에 맞는 직업을 탐색해보세요">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/style.css">
+    <style>
+        body {
+            background: radial-gradient(circle at 30% 20%, #1a1a2e 0%, #050510 60%, #000 100%);
+            color: #fff;
+            font-family: 'Noto Sans KR', sans-serif;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        .page-wrap {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 80px 1.2rem 2rem;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .page-header h1 {
+            font-size: clamp(1.4rem, 4vw, 2rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .page-header p {
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+        /* 은하 탭 */
+        .galaxy-tabs {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            scrollbar-width: none;
+        }
+        .galaxy-tabs::-webkit-scrollbar { display: none; }
+        .galaxy-tab {
+            flex-shrink: 0;
+            padding: 0.5rem 1.1rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.6);
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .galaxy-tab:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .galaxy-tab.active {
+            color: #fff;
+            border-color: var(--tab-color, #fff);
+            background: color-mix(in srgb, var(--tab-color, #fff) 15%, transparent);
+            box-shadow: 0 0 12px color-mix(in srgb, var(--tab-color, #fff) 30%, transparent);
+        }
+        /* 직업 그리드 */
+        .jobs-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+        .job-badge {
+            display: inline-block;
+            padding: 0.5rem 1.1rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+            font-size: 0.85rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.18s;
+        }
+        .job-badge:hover {
+            background: rgba(255,255,255,0.14);
+            border-color: rgba(255,255,255,0.35);
+            transform: translateY(-1px);
+        }
+        .job-badge .arrow { opacity: 0.45; margin-left: 3px; }
+        /* 로딩 */
+        .loading-wrap {
+            text-align: center;
+            padding: 3rem 0;
+            opacity: 0.5;
+        }
+        .loading-dot {
+            display: inline-block;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #fff;
+            margin: 0 3px;
+            animation: blink 1.2s infinite;
+        }
+        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink {
+            0%, 80%, 100% { opacity: 0.2; }
+            40% { opacity: 1; }
+        }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            opacity: 0.45;
+            font-size: 0.9rem;
+        }
+        /* 카운트 */
+        .jobs-count {
+            font-size: 0.78rem;
+            opacity: 0.4;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div class="aurora-bg">
+    <div class="nebula-point nebula-1"></div>
+    <div class="nebula-point nebula-2"></div>
+    <div class="nebula-point nebula-3"></div>
+</div>
+
+<header class="nav" style="position:fixed;top:0;left:0;right:0;z-index:100;">
+    <div class="logo" onclick="location.href='index.html'" style="cursor:pointer;">POLARIS</div>
+</header>
+
+<div class="page-wrap">
+    <div class="page-header">
+        <h1>🔭 직업 탐색</h1>
+        <p>은하 유형별로 어울리는 직업을 살펴보세요</p>
+    </div>
+
+    <div class="galaxy-tabs" id="galaxy-tabs"></div>
+
+    <div class="jobs-count" id="jobs-count"></div>
+    <div id="jobs-loading" class="loading-wrap">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+    </div>
+    <div class="jobs-grid" id="jobs-grid"></div>
+</div>
+
+<nav class="bottom-nav">
+    <a href="index.html" class="tab-item">
+        <span class="tab-icon">🏠</span>
+        <span class="tab-label">홈</span>
+    </a>
+    <a href="polaris.html" class="tab-item">
+        <span class="tab-icon">⭐</span>
+        <span class="tab-label">검사</span>
+    </a>
+    <a href="jobs.html" class="tab-item active">
+        <span class="tab-icon">🔭</span>
+        <span class="tab-label">직업</span>
+    </a>
+    <a href="results-guide.html" class="tab-item">
+        <span class="tab-icon">🌌</span>
+        <span class="tab-label">가이드</span>
+    </a>
+</nav>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+const SUPABASE_URL = 'https://ixouybhxjiijtpyhwhjv.supabase.co'
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4b3V5Ymh4amlpanRweWh3aGp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NTI0NDYsImV4cCI6MjA5MTEyODQ0Nn0.TTOQNdFFQNW5OKzb4DkKlWuCL8cSw4zP9DmfpojU47o'
+
+const GALAXIES = [
+    { id: 1, name: '탐구의 은하', emoji: '🟣', color: '#a55eea' },
+    { id: 2, name: '질서의 은하', emoji: '🔵', color: '#45aaf2' },
+    { id: 3, name: '온기의 은하', emoji: '🟠', color: '#fd9644' },
+    { id: 4, name: '울림의 은하', emoji: '🟡', color: '#fed330' },
+    { id: 5, name: '울타리의 은하', emoji: '🟢', color: '#26de81' },
+    { id: 6, name: '프리즘의 은하', emoji: '🌈', color: '#ffffff' },
+]
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+let allJobs = []
+let activeGalaxyId = 1
+
+async function loadJobs() {
+    const { data, error } = await supabase
+        .from('jobs')
+        .select('name, galaxy_id')
+        .order('galaxy_id')
+    if (!error && data) allJobs = data
+    renderTabs()
+    renderJobs(activeGalaxyId)
+    document.getElementById('jobs-loading').style.display = 'none'
+}
+
+function renderTabs() {
+    const wrap = document.getElementById('galaxy-tabs')
+    wrap.innerHTML = GALAXIES.map(g => `
+        <button class="galaxy-tab ${g.id === activeGalaxyId ? 'active' : ''}"
+            style="--tab-color:${g.color}"
+            onclick="switchTab(${g.id})">
+            ${g.emoji} ${g.name}
+        </button>
+    `).join('')
+}
+
+function renderJobs(galaxyId) {
+    const galaxy = GALAXIES.find(g => g.id === galaxyId)
+    const jobs = allJobs.filter(j => j.galaxy_id === galaxyId)
+    const grid = document.getElementById('jobs-grid')
+    const count = document.getElementById('jobs-count')
+
+    if (jobs.length === 0) {
+        grid.innerHTML = '<div class="empty-state">직업 정보를 불러오는 중...</div>'
+        count.textContent = ''
+        return
+    }
+
+    count.textContent = `${galaxy?.name || ''} · ${jobs.length}개 직업`
+    grid.innerHTML = jobs.map(j => `
+        <a class="job-badge" href="job.html?job=${encodeURIComponent(j.name)}"
+            style="border-color:${galaxy?.color || '#fff'}33">
+            ${j.name}<span class="arrow">›</span>
+        </a>
+    `).join('')
+}
+
+window.switchTab = function(galaxyId) {
+    activeGalaxyId = galaxyId
+    renderTabs()
+    renderJobs(galaxyId)
+
+    // URL 해시 업데이트 (뒤로가기 지원)
+    history.replaceState(null, '', `#galaxy-${galaxyId}`)
+}
+
+// URL 해시로 초기 탭 결정
+const hash = location.hash.match(/galaxy-(\d)/)
+if (hash) activeGalaxyId = parseInt(hash[1])
+
+loadJobs()
+</script>
+</body>
+</html>

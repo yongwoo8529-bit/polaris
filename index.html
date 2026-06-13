@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POLARIS — 학교 진로교육 솔루션</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9406423137638957"
+     crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #040a18;
+            --card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.10);
+            --blue: #4080ff;
+            --purple: #9060ff;
+            --teal: #20c8a0;
+            --dim: rgba(255,255,255,0.55);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body {
+            background: var(--bg);
+            color: #fff;
+            font-family: 'Noto Sans KR', system-ui, sans-serif;
+            overflow-x: hidden;
+        }
+        .bg-glow {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background:
+                radial-gradient(ellipse at 15% 20%, rgba(64,128,255,0.07) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 75%, rgba(144,96,255,0.07) 0%, transparent 55%);
+        }
+        section, nav, footer { position: relative; z-index: 1; }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed; top:0; left:0; right:0; z-index:100;
+            height: 50px; padding: 0 4%;
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(4,10,24,0.88);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 13px; font-weight: 900; letter-spacing: 3px;
+            color: #fff; text-decoration: none;
+        }
+        .nav-right { display: flex; gap: 18px; align-items: center; }
+        .nav-right a {
+            color: var(--dim); text-decoration: none;
+            font-size: 12px; font-weight: 500; transition: color 0.2s;
+        }
+        .nav-right a:hover { color: #fff; }
+        .nav-cta {
+            background: var(--blue); color: #fff !important;
+            padding: 6px 14px; border-radius: 16px; font-weight: 700 !important;
+        }
+        .nav-cta:hover { opacity: 0.85; }
+        @media (max-width:600px) { .nav-right { display:none; } }
+
+        /* ── LAYOUT ── */
+        .wrap { max-width: 860px; margin: 0 auto; padding: 0 4%; }
+
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center;
+            padding: 90px 4% 50px;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(64,128,255,0.12);
+            border: 1px solid rgba(64,128,255,0.35);
+            color: var(--blue);
+            padding: 4px 12px; border-radius: 16px;
+            font-size: 10px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; margin-bottom: 18px;
+        }
+        .hero h1 {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.6rem);
+            font-weight: 500; line-height: 1.2; margin-bottom: 16px;
+            color: #ffffff;
+        }
+        .hero-sub {
+            font-size: clamp(0.83rem, 1.5vw, 0.95rem);
+            color: var(--dim); line-height: 1.85;
+            max-width: 460px; margin: 0 auto 28px;
+            word-break: keep-all;
+        }
+        .hero-btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        .btn-primary {
+            background: var(--blue); color: #fff;
+            padding: 10px 22px; border-radius: 24px;
+            font-size: 13px; font-weight: 700; text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 16px rgba(64,128,255,0.4);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(64,128,255,0.55); }
+        .btn-outline {
+            background: transparent; color: #fff;
+            padding: 10px 22px; border-radius: 24px;
+            font-size: 13px; font-weight: 600; text-decoration: none;
+            border: 1px solid var(--border);
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .btn-outline:hover { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.05); }
+
+        /* ── STATS ── */
+        .stats {
+            padding: 36px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(4,1fr);
+            gap: 20px; text-align: center;
+        }
+        @media (max-width:700px) { .stats-grid { grid-template-columns: repeat(2,1fr); } }
+        .stat-num {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.6rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label { color: var(--dim); font-size: 11px; margin-top: 4px; }
+
+        /* ── FEATURES ── */
+        .features { padding: 60px 0; }
+        .sec-tag {
+            font-family: 'Orbitron', monospace;
+            font-size: 9px; letter-spacing: 3px; color: var(--blue);
+            text-transform: uppercase; margin-bottom: 10px;
+        }
+        .sec-title { font-size: clamp(1.1rem, 3vw, 1.55rem); font-weight: 700; margin-bottom: 10px; line-height: 1.3; }
+        .sec-sub {
+            color: var(--dim); font-size: 0.83rem; line-height: 1.75;
+            max-width: 400px; margin-bottom: 30px; word-break: keep-all;
+        }
+        .feat-grid {
+            display: grid; grid-template-columns: repeat(3,1fr); gap: 12px;
+        }
+        @media (max-width:800px) { .feat-grid { grid-template-columns: 1fr; } }
+        .feat-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 18px;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .feat-card:hover { border-color: rgba(64,128,255,0.35); transform: translateY(-3px); }
+        .feat-icon { font-size: 1.5rem; margin-bottom: 10px; display: block; }
+        .feat-card h3 { font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
+        .feat-card p { color: var(--dim); font-size: 0.78rem; line-height: 1.65; word-break: keep-all; }
+        .feat-soon {
+            display: inline-block; margin-top: 10px;
+            background: rgba(144,96,255,0.14); border: 1px solid rgba(144,96,255,0.28);
+            color: #c090ff; font-size: 10px; padding: 2px 7px; border-radius: 7px;
+        }
+
+        /* ── PRICING ── */
+        .pricing { padding: 60px 0; }
+        .price-grid {
+            display: grid; grid-template-columns: repeat(3,1fr);
+            gap: 12px; margin-top: 30px;
+        }
+        @media (max-width:800px) { .price-grid { grid-template-columns: 1fr; max-width: 340px; margin: 30px auto 0; } }
+        .price-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 22px;
+            transition: transform 0.3s;
+        }
+        .price-card.featured {
+            border-color: var(--blue);
+            background: rgba(64,128,255,0.07);
+            position: relative;
+        }
+        .price-card.featured::before {
+            content: '추천';
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            background: var(--blue); color: #fff;
+            font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 8px;
+        }
+        .price-card:hover { transform: translateY(-3px); }
+        .price-tier { font-size: 10px; color: var(--dim); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+        .price-amount { font-family: 'Orbitron', monospace; font-size: 1.35rem; font-weight: 900; margin-bottom: 3px; }
+        .price-unit { font-size: 10px; color: var(--dim); margin-bottom: 16px; }
+        .price-list { list-style: none; margin-bottom: 16px; }
+        .price-list li {
+            font-size: 11px; padding: 6px 0;
+            border-bottom: 1px solid var(--border); color: var(--dim);
+            display: flex; align-items: center; gap: 7px;
+        }
+        .price-list li::before { content: '✓'; color: var(--teal); font-weight: 700; min-width: 11px; }
+        .price-list li.off { text-decoration: line-through; opacity: 0.35; }
+        .price-list li.off::before { content: '—'; color: var(--dim); }
+        .btn-plan {
+            display: block; width: 100%; padding: 9px;
+            text-align: center; border-radius: 9px;
+            font-size: 12px; font-weight: 700; cursor: pointer;
+            transition: all 0.2s; text-decoration: none;
+        }
+        .btn-plan-ghost { border: 1px solid var(--border); color: #fff; background: transparent; }
+        .btn-plan-ghost:hover { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.05); }
+        .btn-plan-fill {
+            background: var(--blue); color: #fff; border: none;
+            box-shadow: 0 4px 14px rgba(64,128,255,0.3);
+        }
+        .btn-plan-fill:hover { box-shadow: 0 8px 22px rgba(64,128,255,0.5); transform: translateY(-1px); }
+
+        /* ── CTA ── */
+        .cta-section { padding: 60px 0; text-align: center; }
+        .cta-box {
+            background: linear-gradient(135deg, rgba(64,128,255,0.10), rgba(144,96,255,0.10));
+            border: 1px solid rgba(64,128,255,0.22);
+            border-radius: 20px; padding: 44px 28px;
+        }
+        .cta-box h2 { font-size: clamp(1.1rem, 3vw, 1.7rem); font-weight: 700; margin-bottom: 10px; line-height: 1.35; word-break: keep-all; }
+        .cta-box p { color: var(--dim); font-size: 0.85rem; margin-bottom: 26px; word-break: keep-all; }
+
+        /* ── FOOTER ── */
+        footer { padding: 36px 4% 24px; border-top: 1px solid var(--border); }
+        .footer-inner {
+            max-width: 860px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: flex-start;
+            gap: 32px; flex-wrap: wrap;
+        }
+        .footer-brand .ft-logo { font-family: 'Orbitron', monospace; font-size: 14px; font-weight: 900; letter-spacing: 3px; }
+        .footer-brand p { font-size: 12px; color: var(--dim); margin-top: 6px; line-height: 1.65; }
+        .footer-links { display: flex; flex-direction: column; gap: 8px; }
+        .footer-links a { color: var(--dim); text-decoration: none; font-size: 12px; transition: color 0.2s; }
+        .footer-links a:hover { color: #fff; }
+        .footer-bottom {
+            max-width: 860px; margin: 26px auto 0;
+            padding-top: 18px; border-top: 1px solid var(--border);
+            font-size: 11px; color: var(--dim);
+        }
+        footer { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 430px;
+            background: rgba(4,10,24,0.96); backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.10);
+            display: flex; align-items: flex-start; z-index: 1000;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .tab-item {
+            flex: 1; height: 60px; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            text-decoration: none; color: rgba(255,255,255,0.40);
+            gap: 3px; transition: color 0.2s;
+        }
+        .tab-item.active { color: #ffffff; }
+        .tab-icon { font-size: 19px; line-height: 1; }
+        .tab-label { font-size: 10px; font-family: system-ui, sans-serif; letter-spacing: 0.3px; }
+    </style>
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<!-- NAV -->
+<nav>
+    <a href="index.html" class="nav-logo">POLARIS</a>
+    <div class="nav-right">
+        <a href="#features">기능 소개</a>
+        <a href="#pricing">가격</a>
+        <a href="polaris.html">학생 체험</a>
+        <a href="#" onclick="copyEmail(event)" class="nav-cta">도입 문의</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <h1>진로교육을<br>3D로 경험하다</h1>
+    <p class="hero-sub">
+        학생 스스로 40문항에 답하면,<br>
+        나만의 3D 진로 은하가 눈앞에 펼쳐집니다.<br>
+        <span style="color:rgba(255,255,255,0.75); font-size:0.95em;">219개 최신 직업 연계 · 자유학기제 · 진로수업 즉시 활용</span>
+    </p>
+    <div class="hero-btns">
+        <a href="polaris.html" class="btn-primary">무료 체험하기</a>
+        <a href="jobs.html" class="btn-outline">🔭 직업 탐색</a>
+        <a href="#" onclick="copyEmail(event)" class="btn-outline">📧 도입 문의</a>
+    </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+    <div class="wrap">
+        <div class="stats-grid">
+            <div><div class="stat-num">40</div><div class="stat-label">문항 검사</div></div>
+            <div><div class="stat-num">5+</div><div class="stat-label">진로 성향 유형</div></div>
+            <div><div class="stat-num">3D</div><div class="stat-label">인터랙티브 시각화</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+    <div class="wrap">
+        <p class="sec-tag">Features</p>
+        <h2 class="sec-title">기존 진로검사와 다릅니다</h2>
+        <p class="sec-sub">
+            학생들이 스스로 몰입하는 진로탐색 경험.<br>
+            텍스트 결과지가 아닌 인터랙티브 3D 우주로 결과를 시각화합니다.
+        </p>
+        <div class="feat-grid">
+            <div class="feat-card">
+                <span class="feat-icon">🌌</span>
+                <h3>3D 진로 은하 시각화</h3>
+                <p>검사 완료 후 Three.js 3D 인터랙션으로 자신의 성향이 은하계로 펼쳐집니다. 학생들이 자발적으로 공유하고 싶어하는 결과 화면.</p>
+            </div>
+            <div class="feat-card">
+                <span class="feat-icon">🔭</span>
+                <h3>5가지 진로 성향 분석</h3>
+                <p>탐구 · 질서 · 온기 · 울림 · 울타리의 은하. 단순 유형 분류를 넘어 추천 직업군 20개와 핵심 재능을 함께 제시합니다.</p>
+            </div>
+            <div class="feat-card">
+                <span class="feat-icon">📊</span>
+                <h3>교사 관리 대시보드</h3>
+                <p>학급별 학생 검사 현황, 성향 유형 통계, 결과 내보내기. 진로교사가 수업에 바로 활용할 수 있는 관리 도구.</p>
+                <span class="feat-soon">출시 예정</span>
+            </div>
+            <div class="feat-card">
+                <span class="feat-icon">📄</span>
+                <h3>결과 PDF 보고서</h3>
+                <p>학생 · 학부모 상담에 활용할 수 있는 인쇄용 보고서 자동 생성. 진로상담 자료로 즉시 사용 가능합니다.</p>
+                <span class="feat-soon">출시 예정</span>
+            </div>
+            <div class="feat-card">
+                <span class="feat-icon">🏫</span>
+                <h3>학교 단위 계정</h3>
+                <p>학교 코드로 교사 가입 → 학급 생성 → 초대 코드로 학생 참여. 복잡한 설정 없이 5분 안에 수업 준비 완료.</p>
+                <span class="feat-soon">출시 예정</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- COMPARISON -->
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+    <div class="wrap">
+        <p class="sec-tag">Pricing</p>
+        <h2 class="sec-title">합리적인 학교 구독 플랜</h2>
+        <p class="sec-sub">
+            학교 단위 구독으로 학생 수 제한 없이 사용하세요.<br>
+            교육청 납품 · 대량 계약은 별도 문의 주세요.
+        </p>
+        <div class="price-grid">
+            <div class="price-card">
+                <div class="price-tier">Free</div>
+                <div class="price-amount">무료</div>
+                <div class="price-unit">학생 30명 / 월</div>
+                <ul class="price-list">
+                    <li>40문항 진로 검사</li>
+                    <li>3D 은하 시각화</li>
+                    <li>5가지 성향 유형</li>
+                    <li class="off">교사 대시보드</li>
+                    <li class="off">PDF 보고서</li>
+                </ul>
+                <a href="polaris.html" class="btn-plan btn-plan-ghost">무료 체험하기</a>
+            </div>
+            <div class="price-card featured">
+                <div class="price-tier">Standard</div>
+                <div class="price-amount">30만원</div>
+                <div class="price-unit">학교당 / 월 · 학생 무제한</div>
+                <ul class="price-list">
+                    <li>40문항 진로 검사</li>
+                    <li>3D 은하 시각화</li>
+                    <li>5가지 성향 유형</li>
+                    <li>교사 대시보드</li>
+                    <li class="off">PDF 보고서</li>
+                </ul>
+                <a href="#" onclick="copyEmail(event)" class="btn-plan btn-plan-fill">도입 문의하기</a>
+            </div>
+            <div class="price-card">
+                <div class="price-tier">Premium</div>
+                <div class="price-amount">50만원</div>
+                <div class="price-unit">학교당 / 월 · 모든 기능</div>
+                <ul class="price-list">
+                    <li>40문항 진로 검사</li>
+                    <li>3D 은하 시각화</li>
+                    <li>5가지 성향 유형</li>
+                    <li>교사 대시보드</li>
+                    <li>PDF 보고서</li>
+                </ul>
+                <a href="#" onclick="copyEmail(event)" class="btn-plan btn-plan-ghost">도입 문의하기</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <div class="wrap">
+        <div class="cta-box">
+            <h2>지금 바로 학생들에게<br>보여주세요</h2>
+            <p>설치 없이 링크 하나로 시작. 무료 체험으로 수업 활용 가능성을 직접 확인하세요.</p>
+            <div class="hero-btns">
+                <a href="polaris.html" class="btn-primary">무료 체험 시작</a>
+                <a href="jobs.html" class="btn-outline">🔭 직업 탐색</a>
+                <a href="#" onclick="copyEmail(event)" class="btn-outline">📧 도입 문의</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <div class="ft-logo">POLARIS</div>
+            <p>학교 진로교육 솔루션<br>문의: polarisfindream@gmail.com</p>
+        </div>
+        <div class="footer-links">
+            <a href="polaris.html">학생 체험하기</a>
+            <a href="results-guide.html">은하계 가이드</a>
+            <a href="privacy.html">개인정보 처리방침</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2025 POLARIS. All Rights Reserved.
+    </div>
+</footer>
+
+<nav class="bottom-nav">
+    <a href="index.html" class="tab-item active">
+        <span class="tab-icon">🏠</span>
+        <span class="tab-label">홈</span>
+    </a>
+    <a href="polaris.html" class="tab-item">
+        <span class="tab-icon">⭐</span>
+        <span class="tab-label">검사</span>
+    </a>
+    <a href="jobs.html" class="tab-item">
+        <span class="tab-icon">🔭</span>
+        <span class="tab-label">직업</span>
+    </a>
+    <a href="results-guide.html" class="tab-item">
+        <span class="tab-icon">🌌</span>
+        <span class="tab-label">가이드</span>
+    </a>
+</nav>
+
+<div id="email-toast" style="
+    display:none; position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+    background:#fff; color:#111; padding:12px 24px; border-radius:30px;
+    font-size:14px; font-weight:600; box-shadow:0 4px 20px rgba(0,0,0,0.3);
+    z-index:9999; white-space:nowrap;
+">📋 이메일 복사됨: polarisfindream@gmail.com<br><span style="font-size:12px;font-weight:400;opacity:0.75;">이 이메일로 문의를 해주세요!</span></div>
+
+<script>
+function copyEmail(e) {
+    e.preventDefault();
+    const email = 'polarisfindream@gmail.com';
+    const showToast = () => {
+        const t = document.getElementById('email-toast');
+        t.style.display = 'block';
+        setTimeout(() => { t.style.display = 'none'; }, 2500);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(email).then(showToast).catch(() => {
+            prompt('이메일 주소를 복사하세요:', email);
+        });
+    } else {
+        prompt('이메일 주소를 복사하세요:', email);
+    }
+}
+</script>
+
+</body>
+</html>

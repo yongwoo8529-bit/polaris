@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>직업 상세 - POLARIS</title>
+    <meta name="description" content="POLARIS 직업 상세 정보">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: radial-gradient(circle at 30% 20%, #1a1a2e 0%, #050510 60%, #000 100%);
+            color: #fff;
+            font-family: 'Noto Sans KR', sans-serif;
+            min-height: 100vh;
+        }
+        .stars-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+            background-image:
+                radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 60% 10%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 80% 60%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 10% 70%, rgba(255,255,255,0.4) 0%, transparent 100%);
+        }
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; align-items: center; gap: 1rem;
+            padding: 1rem 1.5rem;
+            background: rgba(5, 5, 20, 0.7);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .back-btn {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #fff;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.15); }
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            color: #fff;
+            text-decoration: none;
+        }
+        .page-wrap {
+            position: relative; z-index: 1;
+            max-width: 680px; margin: 0 auto;
+            padding: 100px 1.5rem 4rem;
+        }
+        .loading-state, .error-state {
+            text-align: center; padding: 4rem 0; opacity: 0.6;
+        }
+        .job-header {
+            margin-bottom: 2rem;
+        }
+        .galaxy-badge {
+            display: inline-block;
+            padding: 0.3rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+        .job-title {
+            font-size: clamp(1.6rem, 5vw, 2.2rem);
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.8rem;
+        }
+        .job-description {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.8);
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        @media (max-width: 480px) {
+            .info-grid { grid-template-columns: 1fr; }
+        }
+        .info-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 1.2rem 1.4rem;
+        }
+        .info-card-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-bottom: 0.5rem;
+        }
+        .info-card-value {
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        .salary-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffd700;
+        }
+        .section-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.45;
+            margin: 2rem 0 0.8rem;
+        }
+        .tags-wrap {
+            display: flex; flex-wrap: wrap; gap: 0.5rem;
+        }
+        .tag {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 0.35rem 0.9rem;
+            font-size: 0.85rem;
+        }
+        .divider {
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+            margin: 2rem 0;
+        }
+        .galaxy-link-card {
+            display: flex; align-items: center; gap: 1rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 1.2rem 1.4rem;
+            text-decoration: none;
+            color: #fff;
+            transition: background 0.2s;
+            margin-top: 1.5rem;
+        }
+        .galaxy-link-card:hover { background: rgba(255,255,255,0.08); }
+        .galaxy-link-icon { font-size: 2rem; }
+        .galaxy-link-text { flex: 1; }
+        .galaxy-link-name { font-weight: 600; margin-bottom: 0.2rem; }
+        .galaxy-link-sub { font-size: 0.82rem; opacity: 0.6; }
+        .galaxy-link-arrow { opacity: 0.4; font-size: 1.2rem; }
+    </style>
+  <script type="module" crossorigin src="./assets/job-BENMALVm.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
+</head>
+<body>
+<div class="stars-bg"></div>
+
+<nav>
+    <a class="back-btn" id="back-btn" href="javascript:void(0)" onclick="history.length>1?history.back():window.close()">← 돌아가기</a>
+    <a class="logo" href="index.html">POLARIS</a>
+</nav>
+
+<div class="page-wrap">
+    <div id="loading" class="loading-state">불러오는 중...</div>
+    <div id="error" class="error-state" style="display:none;">직업 정보를 찾을 수 없습니다.</div>
+    <div id="content" style="display:none;">
+        <div class="job-header">
+            <div class="galaxy-badge" id="galaxy-badge"></div>
+            <h1 class="job-title" id="job-title"></h1>
+            <p class="job-description" id="job-desc"></p>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card" id="salary-card">
+                <div class="info-card-label">평균 연봉</div>
+                <div class="info-card-value salary-value" id="job-salary"></div>
+            </div>
+            <div class="info-card" id="galaxy-card">
+                <div class="info-card-label">어울리는 은하</div>
+                <div class="info-card-value" id="galaxy-name-card"></div>
+            </div>
+        </div>
+
+        <div id="majors-section" style="display:none;">
+            <div class="section-title">관련 학과 · 전공</div>
+            <div class="tags-wrap" id="majors-tags"></div>
+        </div>
+
+        <div id="skills-section" style="display:none;">
+            <div class="section-title">필요 역량 · 적성</div>
+            <div class="tags-wrap" id="skills-tags"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <a class="galaxy-link-card" id="galaxy-link" href="results-guide.html">
+            <div class="galaxy-link-icon" id="galaxy-link-icon"></div>
+            <div class="galaxy-link-text">
+                <div class="galaxy-link-name" id="galaxy-link-name"></div>
+                <div class="galaxy-link-sub">은하 가이드 전체 보기</div>
+            </div>
+            <div class="galaxy-link-arrow">›</div>
+        </a>
+
+    </div>
+</div>
+
+</body>
+</html>

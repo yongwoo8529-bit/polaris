@@ -139,10 +139,7 @@ h1, h2, h3 {
     font-size: 1.5rem;
     font-weight: 700;
     text-transform: uppercase;
-    background: linear-gradient(to right, #fff, var(--accent-blue));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #fff;
 }
 
 /* Nav Button & Overlay */

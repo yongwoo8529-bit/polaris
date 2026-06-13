@@ -157,12 +157,6 @@
         .galaxy-link-name { font-weight: 600; margin-bottom: 0.2rem; }
         .galaxy-link-sub { font-size: 0.82rem; opacity: 0.6; }
         .galaxy-link-arrow { opacity: 0.4; font-size: 1.2rem; }
-        .source-note {
-            font-size: 0.75rem;
-            opacity: 0.4;
-            text-align: center;
-            margin-top: 3rem;
-        }
     </style>
 </head>
 <body>
@@ -215,7 +209,6 @@
             <div class="galaxy-link-arrow">›</div>
         </a>
 
-        <p class="source-note" id="source-note"></p>
     </div>
 </div>
 
@@ -307,10 +300,6 @@ function renderJob(data) {
     document.getElementById('galaxy-link-icon').textContent = galaxy.emoji || '🌌'
     document.getElementById('galaxy-link-name').textContent = galaxy.name || '은하 가이드'
 
-    // 출처
-    if (data.career_net_seq) {
-        document.getElementById('source-note').textContent = '직업 설명 출처: 커리어넷 직업사전 (한국직업능력개발원)'
-    }
 
     document.getElementById('loading').style.display = 'none'
     document.getElementById('content').style.display = 'block'

@@ -104,10 +104,17 @@
         <!-- Section 3: Result (Canvas) -->
         <section id="result" class="section">
             <div id="canvas-container"></div>
+
+            <!-- 폭발 후 상단 타이틀 -->
+            <div id="result-ui-top">
+                <h1 id="result-title-top"></h1>
+            </div>
+
+            <!-- 하단 UI (초기 + 폭발 후) -->
             <div id="result-ui">
                 <h1 id="result-title"></h1>
                 <p id="result-desc"></p>
-                
+                <p id="result-sub" style="display:none; font-size:0.72rem; color:rgba(255,255,255,0.45); margin-top:0.4rem;">화면을 직접 움직이며 은하를 관찰하세요</p>
                 <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                     <button id="restart-btn" class="btn-start" style="margin-top: 1.5rem; pointer-events: all; display: none;" onclick="location.href='index.html'">메인으로 돌아가기</button>
                 </div>

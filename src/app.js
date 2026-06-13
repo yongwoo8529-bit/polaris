@@ -345,10 +345,18 @@ function explodeToGalaxies(specialType) {
         gsap.fromTo(mainGalaxy.rotation, { y: 0 }, { y: Math.PI * 4, duration: 15, ease: "power3.out" });
 
         const titleMap = { prism: "🌈 모든 빛을 품은 프리즘 은하", silence: "🌑 깊은 정적의 은하" };
-        document.getElementById("result-title").innerText = titleMap[specialType] || "✨ 당신만의 은하가 탄생했습니다!";
+        const titleText = titleMap[specialType] || "✨ 당신만의 은하가 탄생했습니다!";
+
+        // 상단에 타이틀
+        document.getElementById("result-title-top").innerText = titleText;
+        document.getElementById("result-ui-top").classList.add("visible");
+
+        // 하단 UI — 기존 타이틀 숨기고 설명만
+        document.getElementById("result-title").style.display = "none";
         document.getElementById("result-desc").innerText = "은하를 클릭해 당신의 진로를 탐색해보세요";
+        document.getElementById("result-sub").style.display = "block";
         document.getElementById("restart-btn").style.display = "inline-block";
-        
+
         gsap.to(document.getElementById("result-ui"), { opacity: 1, duration: 1, delay: 1 });
     }, 2800);
 }

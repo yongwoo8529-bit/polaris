@@ -10,7 +10,8 @@ export default defineConfig({
         polaris: resolve(__dirname, 'polaris.html'),
         privacy: resolve(__dirname, 'privacy.html'),
         board: resolve(__dirname, 'board.html'),
-        results_guide: resolve(__dirname, 'results-guide.html')
+        results_guide: resolve(__dirname, 'results-guide.html'),
+        job: resolve(__dirname, 'job.html')
       }
     }
   }

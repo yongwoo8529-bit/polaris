@@ -519,7 +519,7 @@ function showGalaxyDetails(partId) {
         const jobList = data.jobs.split(',').map(j => j.trim()).filter(j => j);
         jobsTitle.innerText = `🚀 추천 직업 (${jobList.length}개)`;
         jobsEl.innerHTML = jobList.map(j =>
-            `<span style="display:inline-block;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:5px 12px;border-radius:20px;font-size:0.82rem;margin:4px 3px;line-height:1.4;">${j}</span>`
+            `<a href="job.html?job=${encodeURIComponent(j)}" target="_blank" style="display:inline-block;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:5px 12px;border-radius:20px;font-size:0.82rem;margin:4px 3px;line-height:1.4;color:#fff;text-decoration:none;cursor:pointer;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.18)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">${j} ›</a>`
         ).join('');
         jobsEl.style.display = "block";
         jobsTitle.style.display = "block";

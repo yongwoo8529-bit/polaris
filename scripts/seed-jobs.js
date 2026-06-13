@@ -606,10 +606,8 @@ async function main() {
     const match = findCareerNetMatch(job.name, careerNetJobs)
     const fallback = JOB_DATA[job.name] || {}
 
-    // 설명: 커리어넷 summary 우선, 없으면 직접 작성
-    const rawDesc = match?.summary
-      ? match.summary.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim().substring(0, 150)
-      : (fallback.desc || '')
+    // 설명: 직접 작성한 설명 사용 (커리어넷 summary는 잘리거나 품질이 낮아 사용 안 함)
+    const rawDesc = fallback.desc || ''
 
     // 연봉: 커리어넷 salery 우선, 없으면 직접 작성
     const salary = match?.salery || fallback.salary || ''
@@ -625,7 +623,11 @@ async function main() {
     values.push(`('${esc(job.name)}', ${job.galaxy_id}, '${esc(rawDesc)}', '${esc(salary)}', '${seq}')`)
   }
 
-  lines.push(values.join(',\n') + ';')
+  lines.push(values.join(',\n'))
+  lines.push('ON CONFLICT (name) DO UPDATE SET')
+  lines.push('  description = EXCLUDED.description,')
+  lines.push('  salary = EXCLUDED.salary,')
+  lines.push('  career_net_seq = EXCLUDED.career_net_seq;')
   process.stderr.write(`\n매칭 성공: ${matchCount}/${GALAXY_JOBS.length}\n`)
   console.log(lines.join('\n'))
 }

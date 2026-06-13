@@ -83,7 +83,7 @@ window.startSurvey = startSurvey;
 function renderQuestion() {
     const q = questions[currentQuestionIndex];
     const progress = ((currentQuestionIndex) / questions.length) * 100;
-    document.getElementById("part-label").innerText = `PART ${q.part}: ${q.title}`;
+    document.getElementById("part-label").innerText = `PART ${q.part}  ·  ${currentQuestionIndex + 1} / ${questions.length}`;
     document.getElementById("progress-bar").style.width = `${progress}%`;
     document.getElementById("progress-pct").innerText = `${Math.round(progress)}%`;
     document.getElementById("question-text").innerText = q.text;

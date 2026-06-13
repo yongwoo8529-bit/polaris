@@ -521,6 +521,7 @@ h1, h2, h3 {
     align-items: center;
     opacity: 0;
     transition: opacity 0.5s ease;
+    padding-bottom: calc(65px + env(safe-area-inset-bottom));
 }
 
 .modal-overlay.active {

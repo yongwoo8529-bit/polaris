@@ -166,6 +166,8 @@ async function showResult() {
     setTimeout(() => {
         document.getElementById("survey").classList.remove("active");
         document.getElementById("result").classList.add("active");
+        const navEl = document.querySelector('.nav');
+        if (navEl) navEl.style.display = 'none';
         initThreeJS(finalColor, specialType);
         setTimeout(() => {
             overlay.style.opacity = "0";

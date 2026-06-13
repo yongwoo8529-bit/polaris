@@ -169,6 +169,18 @@
             word-break: keep-all;
         }
 
+        .highlight {
+            font-weight: 700;
+            color: rgba(255,255,255,0.82);
+            transition: color 0.35s ease;
+        }
+        .galaxy-card.active .highlight {
+            color: var(--accent-color);
+        }
+        .galaxy-card {
+            cursor: pointer;
+        }
+
         /* [Stars Background] */
         #stars-bg {
             position: fixed;
@@ -232,6 +244,9 @@
             POLARIS 테스트를 통해 발견된 당신의 은하계는 어떤 의미를 담고 있을까요? <br>
             각 은하계가 가진 핵심 재능과 당신이 가장 빛나는 순간을 공식 가이드를 통해 확인해 보세요.
         </p>
+        <p style="margin-top: 0.7rem; font-size: 0.72rem; color: rgba(255,255,255,0.35); letter-spacing: 0.5px;">
+            ✦ 은하 카드를 클릭해 핵심 내용을 확인하세요
+        </p>
     </header>
 
     <main class="galaxy-grid">
@@ -242,10 +257,10 @@
             <span class="galaxy-tagline">"밤하늘 너머 숨겨진 진실을 찾아내는 지혜의 빛"</span>
             
             <div class="section-title">핵심 에너지</div>
-            <p class="content-text">분석적 사고와 강한 지적 호기심이 핵심 동력입니다. 현상의 표면을 넘어 원리와 구조를 탐구하려는 성향이 뚜렷하며, 관심 주제에 대해 깊이 있게 파고드는 집요함이 두드러집니다.</p>
+            <p class="content-text"><span class="highlight">분석적 사고</span>와 <span class="highlight">강한 지적 호기심</span>이 핵심 동력입니다. 현상의 표면을 넘어 <span class="highlight">원리와 구조를 탐구</span>하려는 성향이 뚜렷하며, 관심 주제에 대해 깊이 있게 파고드는 <span class="highlight">집요함</span>이 두드러집니다.</p>
 
             <div class="section-title">가장 빛나는 순간</div>
-            <p class="content-text">복잡한 문제의 실마리를 스스로 찾아냈을 때, 또는 새로운 지식 체계를 이해하고 정리했을 때 강한 성취감을 느낍니다. 지식의 경계를 확장하는 탐구 환경에서 자연스러운 몰입이 이루어집니다.</p>
+            <p class="content-text">복잡한 문제의 실마리를 스스로 찾아냈을 때, 또는 새로운 지식 체계를 이해하고 정리했을 때 <span class="highlight">강한 성취감</span>을 느낍니다. <span class="highlight">지식의 경계를 확장</span>하는 탐구 환경에서 <span class="highlight">자연스러운 몰입</span>이 이루어집니다.</p>
         </article>
 
         <!-- 2: Order -->
@@ -255,10 +270,10 @@
             <span class="galaxy-tagline">"복잡한 세상 속에 나만의 길을 만드는 설계자의 빛"</span>
             
             <div class="section-title">핵심 에너지</div>
-            <p class="content-text">체계적 사고와 논리적 구조화 능력이 강점입니다. 복잡한 문제를 단계적으로 분해하고 효율적인 시스템을 설계하는 데 탁월하며, 완성도 높은 결과물을 만들어내는 데서 동기를 얻습니다.</p>
+            <p class="content-text"><span class="highlight">체계적 사고</span>와 <span class="highlight">논리적 구조화 능력</span>이 강점입니다. 복잡한 문제를 단계적으로 분해하고 <span class="highlight">효율적인 시스템을 설계</span>하는 데 탁월하며, <span class="highlight">완성도 높은 결과물</span>을 만들어내는 데서 동기를 얻습니다.</p>
 
             <div class="section-title">가장 빛나는 순간</div>
-            <p class="content-text">계획이 정확하게 실행되거나 복잡한 체계가 맞물려 돌아갈 때 강한 성취감을 느낍니다. 예측 가능하고 안정적인 환경에서 집중력이 극대화되며, 기준과 절차를 명확히 세우는 과정에서 역량이 빛납니다.</p>
+            <p class="content-text">계획이 정확하게 실행되거나 복잡한 체계가 맞물려 돌아갈 때 <span class="highlight">강한 성취감</span>을 느낍니다. 예측 가능하고 <span class="highlight">안정적인 환경</span>에서 <span class="highlight">집중력이 극대화</span>되며, 기준과 절차를 명확히 세우는 과정에서 역량이 빛납니다.</p>
         </article>
 
         <!-- 3: Empathy -->
@@ -268,10 +283,10 @@
             <span class="galaxy-tagline">"얼어붙은 마음을 사르르 녹이는 치유자의 빛"</span>
             
             <div class="section-title">핵심 에너지</div>
-            <p class="content-text">높은 감수성과 공감 능력이 핵심 자산입니다. 타인의 감정 변화를 세밀하게 감지하고, 관계 속에서 자연스럽게 안정감을 조성하는 역할을 수행합니다. 사람 중심의 환경에서 두드러진 역량을 발휘합니다.</p>
+            <p class="content-text"><span class="highlight">높은 감수성</span>과 <span class="highlight">공감 능력</span>이 핵심 자산입니다. <span class="highlight">타인의 감정 변화를 세밀하게 감지</span>하고, 관계 속에서 자연스럽게 <span class="highlight">안정감을 조성</span>하는 역할을 수행합니다. 사람 중심의 환경에서 두드러진 역량을 발휘합니다.</p>
 
             <div class="section-title">가장 빛나는 순간</div>
-            <p class="content-text">누군가가 자신의 감정을 진심으로 이해받았다고 느낄 때, 또는 어려운 상황에 처한 이를 실질적으로 도왔을 때 깊은 보람을 느낍니다. 관계의 질을 높이는 과정에서 자연스러운 몰입이 이루어집니다.</p>
+            <p class="content-text">누군가가 자신의 감정을 진심으로 이해받았다고 느낄 때, 또는 어려운 상황에 처한 이를 실질적으로 도왔을 때 <span class="highlight">깊은 보람</span>을 느낍니다. <span class="highlight">관계의 질을 높이는</span> 과정에서 <span class="highlight">자연스러운 몰입</span>이 이루어집니다.</p>
         </article>
 
         <!-- 4: Expression -->
@@ -281,10 +296,10 @@
             <span class="galaxy-tagline">"무채색 도화지에 무지개를 그려 넣는 시작의 빛"</span>
             
             <div class="section-title">핵심 에너지</div>
-            <p class="content-text">독창적인 표현력과 창조적 관점이 핵심입니다. 경험과 감정을 고유한 형식으로 외화(外化)하려는 내적 동기가 강하며, 기존의 틀을 벗어난 방식으로 세계를 재해석하는 데서 강점을 발휘합니다.</p>
+            <p class="content-text"><span class="highlight">독창적인 표현력</span>과 <span class="highlight">창조적 관점</span>이 핵심입니다. 경험과 감정을 고유한 형식으로 외화(外化)하려는 <span class="highlight">내적 동기</span>가 강하며, 기존의 틀을 벗어난 방식으로 <span class="highlight">세계를 재해석</span>하는 데서 강점을 발휘합니다.</p>
 
             <div class="section-title">가장 빛나는 순간</div>
-            <p class="content-text">자신의 표현이 타인에게 감동이나 영감을 줄 때, 또는 창작 과정에서 완전한 몰입을 경험할 때 가장 강한 에너지를 발휘합니다. 결과물이 세상과 연결될 때 깊은 존재감을 느낍니다.</p>
+            <p class="content-text">자신의 표현이 타인에게 <span class="highlight">감동이나 영감</span>을 줄 때, 또는 창작 과정에서 <span class="highlight">완전한 몰입</span>을 경험할 때 가장 강한 에너지를 발휘합니다. 결과물이 세상과 연결될 때 <span class="highlight">깊은 존재감</span>을 느낍니다.</p>
         </article>
 
         <!-- 5: Support -->
@@ -294,10 +309,10 @@
             <span class="galaxy-tagline">"모두가 안심하고 쉴 수 있게 자리를 지키는 수호자의 빛"</span>
             
             <div class="section-title">핵심 에너지</div>
-            <p class="content-text">높은 책임감과 안정 지향적 성향이 강점입니다. 공동체의 균형을 유지하고 구성원이 신뢰할 수 있는 기반을 만드는 역할에서 두드러진 역량을 발휘하며, 지속성과 신뢰가 핵심 가치입니다.</p>
+            <p class="content-text"><span class="highlight">높은 책임감</span>과 <span class="highlight">안정 지향적 성향</span>이 강점입니다. 공동체의 균형을 유지하고 구성원이 <span class="highlight">신뢰할 수 있는 기반</span>을 만드는 역할에서 두드러진 역량을 발휘하며, <span class="highlight">지속성과 신뢰</span>가 핵심 가치입니다.</p>
 
             <div class="section-title">가장 빛나는 순간</div>
-            <p class="content-text">맡은 역할을 끝까지 완수하거나 팀 전체의 목표 달성에 기여했을 때 깊은 만족감을 느낍니다. 신뢰를 기반으로 한 안정적인 관계에서 집중력이 극대화되며, 꾸준함으로 쌓은 성과에서 가장 큰 보람을 얻습니다.</p>
+            <p class="content-text">맡은 역할을 끝까지 완수하거나 팀 전체의 목표 달성에 기여했을 때 <span class="highlight">깊은 만족감</span>을 느낍니다. 신뢰를 기반으로 한 안정적인 관계에서 <span class="highlight">집중력이 극대화</span>되며, 꾸준함으로 쌓은 성과에서 <span class="highlight">가장 큰 보람</span>을 얻습니다.</p>
         </article>
 
         <!-- 6: Prism -->
@@ -307,10 +322,10 @@
             <span class="galaxy-tagline">"모든 빛을 품어 눈부시게 빛나는 시작의 별무리"</span>
             
             <div class="section-title">핵심 에너지</div>
-            <p class="content-text">복수의 성향이 균형 있게 발달된 멀티포텐셜리티(Multipotentiality)가 특징입니다. 단일 분야보다 영역을 넘나드는 융합적 사고에서 강점을 발휘하며, 다양한 상황에 유연하게 적응하는 능력이 뛰어납니다.</p>
+            <p class="content-text">복수의 성향이 균형 있게 발달된 <span class="highlight">멀티포텐셜리티</span>(Multipotentiality)가 특징입니다. 단일 분야보다 영역을 넘나드는 <span class="highlight">융합적 사고</span>에서 강점을 발휘하며, 다양한 상황에 <span class="highlight">유연하게 적응</span>하는 능력이 뛰어납니다.</p>
 
             <div class="section-title">가장 빛나는 순간</div>
-            <p class="content-text">여러 분야의 지식과 역량이 하나의 문제 해결에 융합될 때, 또는 타인이 발견하지 못한 새로운 연결 고리를 찾아냈을 때 강한 성취감을 느낍니다. 방향을 찾는 과정 자체가 성장의 동력입니다.</p>
+            <p class="content-text">여러 분야의 지식과 역량이 하나의 문제 해결에 <span class="highlight">융합</span>될 때, 또는 타인이 발견하지 못한 <span class="highlight">새로운 연결 고리</span>를 찾아냈을 때 강한 성취감을 느낍니다. 방향을 찾는 과정 자체가 <span class="highlight">성장의 동력</span>입니다.</p>
         </article>
 
         <!-- 7: Silence -->
@@ -320,10 +335,10 @@
             <span class="galaxy-tagline">"새로운 폭발을 기다리는 깊고 신비로운 성운"</span>
             
             <div class="section-title">핵심 에너지</div>
-            <p class="content-text">현재 자신의 방향성을 깊이 성찰하는 단계에 있습니다. 외부의 기준보다 내면의 기준을 중시하는 성향이 강하며, 쉽게 흔들리지 않는 독립적인 판단력을 지니고 있습니다.</p>
+            <p class="content-text">현재 자신의 방향성을 <span class="highlight">깊이 성찰</span>하는 단계에 있습니다. 외부의 기준보다 <span class="highlight">내면의 기준</span>을 중시하는 성향이 강하며, 쉽게 흔들리지 않는 <span class="highlight">독립적인 판단력</span>을 지니고 있습니다.</p>
 
             <div class="section-title">가장 빛나는 순간</div>
-            <p class="content-text">외부의 평가에 흔들리지 않고 스스로의 기준으로 선택을 내릴 때, 또는 타인이 지나쳤던 깊은 통찰을 발견했을 때 자신만의 가치를 확인합니다. 침묵 속의 성찰이 단단한 방향성으로 이어집니다.</p>
+            <p class="content-text">외부의 평가에 흔들리지 않고 <span class="highlight">스스로의 기준</span>으로 선택을 내릴 때, 또는 타인이 지나쳤던 <span class="highlight">깊은 통찰</span>을 발견했을 때 자신만의 가치를 확인합니다. 침묵 속의 성찰이 <span class="highlight">단단한 방향성</span>으로 이어집니다.</p>
         </article>
     </main>
 
@@ -368,6 +383,13 @@
         </a>
     </nav>
 
+    <script>
+        document.querySelectorAll('.galaxy-card').forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('active');
+            });
+        });
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const canvas = document.getElementById('stars-bg');

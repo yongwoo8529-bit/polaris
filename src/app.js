@@ -48,10 +48,20 @@ const questions = [
     { part: 5, text: "그룹 안에서 분위기가 어색하거나 소외된 친구가 있으면, 그냥 지나치지 못하고 신경 쓰인다.", title: "PART 5 · 울타리의 은하" },
     { part: 5, text: "무작정 새로운 것에 뛰어들기보다, 충분히 알아보고 준비된 다음에 시작하는 게 맞다고 생각한다.", title: "PART 5 · 울타리의 은하" },
     { part: 5, text: "내가 주인공이 되지 않아도, 우리 팀 전체가 잘 되는 것이 나에게 더 중요하다.", title: "PART 5 · 울타리의 은하" },
-    { part: 5, text: "새로운 것을 계속 시도하기보다, 이미 있는 것을 더 잘 가꾸고 지키는 역할이 나와 더 잘 맞는다.", title: "PART 5 · 울타리의 은하" }
+    { part: 5, text: "새로운 것을 계속 시도하기보다, 이미 있는 것을 더 잘 가꾸고 지키는 역할이 나와 더 잘 맞는다.", title: "PART 5 · 울타리의 은하" },
+
+    // ── Part 6: 손길의 은하 ── 실용 / 제작 / 신체 기술
+    { part: 6, text: "손으로 직접 뭔가를 만들거나 고쳤을 때, 완성된 결과물을 보면 뿌듯함이 남다르게 크다.", title: "PART 6 · 손길의 은하" },
+    { part: 6, text: "기계나 전자 기기가 어떻게 작동하는지 분해해보거나 직접 조작해보고 싶다는 생각이 자주 든다.", title: "PART 6 · 손길의 은하" },
+    { part: 6, text: "캠핑, 등산, 텃밭 가꾸기처럼 자연 속에서 몸을 쓰는 활동이 실내 공부보다 훨씬 재미있다.", title: "PART 6 · 손길의 은하" },
+    { part: 6, text: "레고, 모형 조립, 목공 같은 걸 할 때 설명서를 보며 정확하게 완성해 나가는 과정이 즐겁다.", title: "PART 6 · 손길의 은하" },
+    { part: 6, text: "체육 실기, 미술 실기처럼 몸이나 손을 써서 실제로 '해내는' 과제에서 남들보다 더 잘한다는 걸 느낀다.", title: "PART 6 · 손길의 은하" },
+    { part: 6, text: "집에 뭔가 고장 나면 그냥 두기보다 직접 고쳐보거나 방법을 찾아보고 싶다는 생각이 드는 편이다.", title: "PART 6 · 손길의 은하" },
+    { part: 6, text: "요리, 바느질, 목공, 도예처럼 재료를 직접 다루며 결과물을 만들어내는 활동에 흥미가 있다.", title: "PART 6 · 손길의 은하" },
+    { part: 6, text: "책이나 강의보다 직접 해보면서 몸으로 익히는 방식이 나에게 훨씬 잘 맞는다.", title: "PART 6 · 손길의 은하" }
 ];
 
-let scores = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+let scores = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
 let currentQuestionIndex = 0;
 let answerHistory = []; // Track scores given for each question
 
@@ -147,17 +157,17 @@ async function showResult() {
     if (allFives) {
         specialType = 'prism';
         finalColor = 0xffffff; // White core for prism
-        maxPart = 6;
+        maxPart = 7;
     } else if (allOnes) {
         specialType = 'silence';
         finalColor = 0x2c3e50; // Deep navy for silence
-        maxPart = 7;
+        maxPart = 8;
     } else {
         let maxScore = scores[1];
-        for (let i = 2; i <= 5; i++) {
+        for (let i = 2; i <= 6; i++) {
             if (scores[i] > maxScore) { maxScore = scores[i]; maxPart = i; }
         }
-        const galaxyColors = { 1: 0xa55eea, 2: 0x45aaf2, 3: 0xfd9644, 4: 0xfed330, 5: 0x26de81 };
+        const galaxyColors = { 1: 0xa55eea, 2: 0x45aaf2, 3: 0xfd9644, 4: 0xfed330, 5: 0x26de81, 6: 0xe05c5c };
         finalColor = galaxyColors[maxPart];
     }
 
@@ -281,18 +291,18 @@ function explodeToGalaxies(specialType) {
     let score = 20;
 
     if (specialType === 'prism') {
-        maxPart = 6;
+        maxPart = 7;
         score = 20;
     } else if (specialType === 'silence') {
-        maxPart = 7;
+        maxPart = 8;
         score = 4;
     } else {
         let maxScore = scores[1];
-        for (let j = 2; j <= 5; j++) { if (scores[j] > maxScore) { maxScore = scores[j]; maxPart = j; } }
+        for (let j = 2; j <= 6; j++) { if (scores[j] > maxScore) { maxScore = scores[j]; maxPart = j; } }
         score = scores[maxPart];
     }
 
-    const galaxyColors = [0xa55eea, 0x45aaf2, 0xfd9644, 0xfed330, 0x26de81, 0xffffff, 0x2c3e50];
+    const galaxyColors = [0xa55eea, 0x45aaf2, 0xfd9644, 0xfed330, 0x26de81, 0xe05c5c, 0xffffff, 0x2c3e50];
     const colorInt = galaxyColors[maxPart - 1];
     const normalizedScore = (score - 4) / 16;
 
@@ -502,13 +512,20 @@ const galaxyDetails = {
         jobs: "공무원(행정직·복지직), 외교관, 경찰관, 소방관, 군인(장교), 해경, 119 구급대원, 교도관, 항공기 조종사, 승무원, 호텔리어, 비서, 인사 관리자(HR), 총무 담당자, 경영 지원 전문가, 팀 매니저, 운영 관리자, 행사 운영자, 고객 만족 전문가(CS), 물류 관리자, 생산 관리자, 유통 관리사, 부동산 관리사, 시설 관리 전문가, 자산 관리사, 의료 행정가, 보안 요원, 안전 관리자, 재난 구호 전문가, 환경 감시원, 문화재 보존원, 박물관 학예사, 기록물 보존가, 도서관 운영자, CSR 담당자, 마을 공동체 활동가, 생협 운영자, 사회 안전망 코디네이터, 복지 시설 관리자, 지역사회 발전 매니저"
     },
     6: {
+        name: "🟥 손길의 은하 (The Galaxy of Craft)",
+        tagline: "두 손으로 세상을 빚어내는 장인의 빛",
+        core: "탁월한 신체 감각과 실용적 문제 해결력이 핵심 동력입니다. 직접 만지고 조작하며 결과를 만들어내는 실천적 지능이 뛰어나며, 도구·재료·자연과 상호작용하는 환경에서 두드러진 역량을 발휘합니다.",
+        moment: "직접 만든 결과물이 눈앞에 완성됐을 때, 또는 망가진 것을 자신의 손으로 되살렸을 때 강한 성취감을 느낍니다. 몸으로 익힌 기술이 쌓일수록 자신감이 높아지며, 실제 현장에서 즉각적인 역할을 수행할 때 가장 빛납니다.",
+        jobs: "자동차 정비사, 항공 정비사, 기계 설계 엔지니어, 전기 기사, 전자 기기 수리사, 용접 기능사, 건설 현장 관리자, 목공예가, 도예가, 조각가, 조리사(셰프), 제과제빵사, 바리스타, 농업인, 원예사, 조경 디자이너, 산림 관리사, 반려동물 훈련사, 동물 사육사, 스포츠 선수, 퍼스널 트레이너, 수영 강사, 소방관, 군인, 해기사(선박 항해사), 철도 기관사, 드론 조종사, 측량 기사, 지질 조사원, 인테리어 시공자, 3D 프린팅 기술자, 의료 기기 기술자, 치기공사, 안경사, 물리치료사, 피부 관리사, 헤어 디자이너, 네일 아티스트, 특수 분장사, 의상 제작자"
+    },
+    7: {
         name: "🌈 프리즘의 은하 (The Galaxy of Prism)",
         tagline: "모든 빛을 품어 눈부시게 빛나는 시작의 별무리",
         core: "복수의 성향이 균형 있게 발달된 멀티포텐셜리티(Multipotentiality)가 특징입니다. 단일 분야보다 영역을 넘나드는 융합적 사고에서 강점을 발휘하며, 다양한 상황에 유연하게 적응하는 능력이 뛰어납니다.",
         moment: "여러 분야의 지식과 역량이 하나의 문제 해결에 융합될 때, 또는 타인이 발견하지 못한 새로운 연결 고리를 찾아냈을 때 강한 성취감을 느낍니다. 방향을 찾는 과정 자체가 성장의 동력입니다.",
         jobs: "창업가(CEO), 총괄 프로듀서(PD), 크리에이티브 디렉터, 서비스 기획자, 미래학자, 사회 혁신가, 브랜드 전략가, 에듀테크 개발자, 과학 커뮤니케이터, 정책 입안자, 도시 재생 전문가, 문화 인류학자, 기술 인문학자, NGO 단체장, 인터랙티브 아티스트, UX 라이터, 글로벌 비즈니스 컨설턴트, 다큐멘터리 감독, 변혁적 리더, 종합 예술가"
     },
-    7: {
+    8: {
         name: "🌑 정적의 은하 (The Galaxy of Silence)",
         tagline: "새로운 폭발을 기다리는 깊고 신비로운 성운",
         core: "현재 자신의 방향성을 깊이 성찰하는 단계에 있습니다. 외부의 기준보다 내면의 기준을 중시하는 성향이 강하며, 쉽게 흔들리지 않는 독립적인 판단력을 지니고 있습니다.",

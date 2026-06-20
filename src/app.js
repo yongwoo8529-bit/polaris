@@ -265,6 +265,7 @@ function initThreeJS(polarisColor, specialType) {
     window.addEventListener('pointerup', (e) => {
         if (Math.hypot(e.clientX - pointerStartPos.x, e.clientY - pointerStartPos.y) > 10 || (Date.now() - pointerStartTime) > 400) return;
         if (document.getElementById("galaxy-modal").classList.contains('active')) return;
+        if (e.target.closest('button, a, nav')) return;
         mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
         raycaster.setFromCamera(mouse, camera);

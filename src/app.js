@@ -304,7 +304,7 @@ function explodeToGalaxies(specialType) {
 
     const galaxyColors = [0xa55eea, 0x45aaf2, 0xfd9644, 0xfed330, 0x26de81, 0xe05c5c, 0xffffff, 0x2c3e50];
     const colorInt = galaxyColors[maxPart - 1];
-    const normalizedScore = (score - 4) / 16;
+    const normalizedScore = Math.min(1, Math.max(0, (score - 8) / 32));
 
     // EVEN LARGER SIZE FOR SILENCE: from 1.2 to 2.5
     const finalPlanetGeom = new THREE.SphereGeometry(specialType === 'silence' ? 2.5 : (1.5 + normalizedScore * 1.5), 64, 64);
@@ -342,7 +342,7 @@ function explodeToGalaxies(specialType) {
     currentUserType = maxPart;
 
     const radiusScale = 1.5 + normalizedScore * 8;
-    const hitbox = new THREE.Mesh(new THREE.SphereGeometry(specialType === 'silence' ? 2 : radiusScale * 0.8, 16, 16), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }));
+    const hitbox = new THREE.Mesh(new THREE.SphereGeometry(specialType === 'silence' ? 2 : radiusScale * 0.8, 16, 16), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthTest: false, depthWrite: false }));
     hitbox.userData = { partId: maxPart };
     scene.add(hitbox);
     selectableGalaxies.push(hitbox);
@@ -435,7 +435,7 @@ function generateParticleTexture() {
 }
 
 function createGalaxy(color, score, specialType) {
-    const normalizedScore = (score - 4) / 16;
+    const normalizedScore = Math.min(1, Math.max(0, (score - 8) / 32));
     let count = 500 + Math.pow(normalizedScore, 1.5) * 4500;
     if (specialType === 'silence') count = 800;
     

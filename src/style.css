@@ -318,10 +318,13 @@ h1, h2, h3 {
 }
 
 #question-text {
-    font-size: 1.15rem;
-    line-height: 1.4;
+    font-size: 1.1rem;
+    line-height: 1.7;
     margin-bottom: 1.6rem;
-    min-height: 3rem;
+    min-height: 3.5rem;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    letter-spacing: 0;
 }
 
 .rating-options {

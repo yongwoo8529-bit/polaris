@@ -285,7 +285,7 @@ function explodeToGalaxies(specialType) {
     gsap.to(document.getElementById("result-ui"), { opacity: 0, duration: 0.5 });
     createShatteredImplosion(centralPolaris.position, centralPolaris.material.color, specialType);
     gsap.to(centralPolaris.scale, { x: 0, y: 0, z: 0, duration: 0.8, ease: "power4.in" });
-    gsap.to(centralPolaris.material, { opacity: 0, duration: 0.8 });
+    gsap.to(centralPolaris.material, { opacity: 0, duration: 0.8, onComplete: () => { scene.remove(centralPolaris); } });
 
     let maxPart = 1;
     let score = 20;

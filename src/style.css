@@ -630,8 +630,10 @@ h1, h2, h3 {
 
 .modal-info-section p {
     font-size: 0.83rem;
-    line-height: 1.6;
+    line-height: 1.75;
     color: #eee;
+    word-break: keep-all;
+    overflow-wrap: break-word;
 }
 
 @media (max-width: 600px) {

@@ -272,8 +272,7 @@ function initThreeJS(polarisColor, specialType) {
         if (!isPolarisClicked) {
             if (raycaster.intersectObject(centralPolaris).length > 0) explodeToGalaxies(specialType);
         } else {
-            const intersects = raycaster.intersectObjects(selectableGalaxies);
-            if (intersects.length > 0) showGalaxyDetails(intersects[0].object.userData.partId);
+            showGalaxyDetails(currentUserType);
         }
     });
 
@@ -306,17 +305,17 @@ function explodeToGalaxies(specialType) {
     const colorInt = galaxyColors[maxPart - 1];
     const normalizedScore = Math.min(1, Math.max(0, (score - 8) / 32));
 
-    // 중앙 글로우: 구 메쉬 없이 스프라이트만 사용 (평면 disc 아티팩트 방지)
+    // 중앙 글로우: 작은 흰 코어 + 은하색 외곽 글로우 (스프라이트만 사용)
     const coreSprite = new THREE.Sprite(new THREE.SpriteMaterial({
         map: generateGlowTexture(0xffffff), color: 0xffffff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending
     }));
-    coreSprite.scale.set(specialType === 'silence' ? 3 : 2, specialType === 'silence' ? 3 : 2, 1);
+    coreSprite.scale.set(2, 2, 1);
     scene.add(coreSprite);
 
     const glow1 = new THREE.Sprite(new THREE.SpriteMaterial({
         map: generateGlowTexture(colorInt), color: 0xffffff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending
     }));
-    glow1.scale.set(specialType === 'silence' ? 10 : 12, specialType === 'silence' ? 10 : 12, 1);
+    glow1.scale.set(specialType === 'silence' ? 8 : 10, specialType === 'silence' ? 8 : 10, 1);
     scene.add(glow1);
 
     const mainGalaxy = createGalaxy(colorInt, score, specialType);
@@ -324,16 +323,9 @@ function explodeToGalaxies(specialType) {
     starSystems.push(mainGalaxy);
     currentUserType = maxPart;
 
-    const radiusScale = 1.5 + normalizedScore * 8;
-    const hitbox = new THREE.Mesh(new THREE.SphereGeometry(specialType === 'silence' ? 3 : radiusScale * 0.8, 16, 16), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthTest: false, depthWrite: false }));
-    hitbox.userData = { partId: maxPart };
-    scene.add(hitbox);
-    selectableGalaxies.push(hitbox);
-
     setTimeout(() => {
-        gsap.to(coreSprite.material, { opacity: specialType === 'silence' ? 0.4 : 0.7, duration: 2 });
-        gsap.to(coreSprite.scale, { x: specialType === 'silence' ? 5 : 4, y: specialType === 'silence' ? 5 : 4, duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut" });
-        gsap.to(glow1.material, { opacity: specialType === 'silence' ? 0.2 : 0.35, duration: 3 });
+        gsap.to(coreSprite.material, { opacity: specialType === 'silence' ? 0.3 : 0.45, duration: 2 });
+        gsap.to(glow1.material, { opacity: specialType === 'silence' ? 0.15 : 0.22, duration: 3 });
         gsap.to(mainGalaxy.scale, { x: 1, y: 1, z: 1, duration: 5, ease: "power2.out" });
         gsap.fromTo(mainGalaxy.rotation, { y: 0 }, { y: Math.PI * 4, duration: 15, ease: "power3.out" });
 

@@ -308,7 +308,7 @@ function explodeToGalaxies(specialType) {
 
     // EVEN LARGER SIZE FOR SILENCE: from 1.2 to 2.5
     const finalPlanetGeom = new THREE.SphereGeometry(specialType === 'silence' ? 2.5 : (1.5 + normalizedScore * 1.5), 64, 64);
-    const finalPlanetMat = new THREE.MeshBasicMaterial({ color: colorInt, transparent: true, opacity: 0, map: centralPolaris.material.map });
+    const finalPlanetMat = new THREE.MeshBasicMaterial({ color: colorInt, transparent: true, opacity: 0 });
     const finalPlanet = new THREE.Mesh(finalPlanetGeom, finalPlanetMat);
     scene.add(finalPlanet);
 
@@ -342,7 +342,7 @@ function explodeToGalaxies(specialType) {
     currentUserType = maxPart;
 
     const radiusScale = 1.5 + normalizedScore * 8;
-    const hitbox = new THREE.Mesh(new THREE.SphereGeometry(specialType === 'silence' ? 2 : radiusScale * 0.7, 8, 8), new THREE.MeshBasicMaterial({ visible: false }));
+    const hitbox = new THREE.Mesh(new THREE.SphereGeometry(specialType === 'silence' ? 2 : radiusScale * 0.8, 16, 16), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }));
     hitbox.userData = { partId: maxPart };
     scene.add(hitbox);
     selectableGalaxies.push(hitbox);

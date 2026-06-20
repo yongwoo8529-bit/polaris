@@ -306,35 +306,18 @@ function explodeToGalaxies(specialType) {
     const colorInt = galaxyColors[maxPart - 1];
     const normalizedScore = Math.min(1, Math.max(0, (score - 8) / 32));
 
-    // EVEN LARGER SIZE FOR SILENCE: from 1.2 to 2.5
-    const finalPlanetGeom = new THREE.SphereGeometry(specialType === 'silence' ? 2.5 : (1.5 + normalizedScore * 1.5), 64, 64);
-    const finalPlanetMat = new THREE.MeshBasicMaterial({ color: colorInt, transparent: true, opacity: 0 });
-    const finalPlanet = new THREE.Mesh(finalPlanetGeom, finalPlanetMat);
-    scene.add(finalPlanet);
-
-    // ADD INNER WHITE CORE FOR SILENCE
-    if (specialType === 'silence') {
-        const coreGeom = new THREE.SphereGeometry(0.6, 32, 32);
-        const coreMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 });
-        const coreMesh = new THREE.Mesh(coreGeom, coreMat);
-        finalPlanet.add(coreMesh);
-        
-        const coreGlow = new THREE.Sprite(new THREE.SpriteMaterial({
-            map: generateGlowTexture(0xffffff), color: 0xffffff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending
-        }));
-        coreGlow.scale.set(6, 6, 1);
-        coreMesh.add(coreGlow);
-
-        gsap.to(coreMat, { opacity: 1, duration: 2, delay: 0.5 });
-        gsap.to(coreGlow.material, { opacity: 0.8, duration: 2, delay: 0.5 });
-        gsap.to(coreGlow.scale, { x: 8, y: 8, duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut" });
-    }
+    // 중앙 글로우: 구 메쉬 없이 스프라이트만 사용 (평면 disc 아티팩트 방지)
+    const coreSprite = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: generateGlowTexture(0xffffff), color: 0xffffff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending
+    }));
+    coreSprite.scale.set(specialType === 'silence' ? 3 : 2, specialType === 'silence' ? 3 : 2, 1);
+    scene.add(coreSprite);
 
     const glow1 = new THREE.Sprite(new THREE.SpriteMaterial({
         map: generateGlowTexture(colorInt), color: 0xffffff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending
     }));
-    glow1.scale.set(specialType === 'silence' ? 12 : 15, specialType === 'silence' ? 12 : 15, 1);
-    finalPlanet.add(glow1);
+    glow1.scale.set(specialType === 'silence' ? 10 : 12, specialType === 'silence' ? 10 : 12, 1);
+    scene.add(glow1);
 
     const mainGalaxy = createGalaxy(colorInt, score, specialType);
     scene.add(mainGalaxy);
@@ -342,15 +325,15 @@ function explodeToGalaxies(specialType) {
     currentUserType = maxPart;
 
     const radiusScale = 1.5 + normalizedScore * 8;
-    const hitbox = new THREE.Mesh(new THREE.SphereGeometry(specialType === 'silence' ? 2 : radiusScale * 0.8, 16, 16), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthTest: false, depthWrite: false }));
+    const hitbox = new THREE.Mesh(new THREE.SphereGeometry(specialType === 'silence' ? 3 : radiusScale * 0.8, 16, 16), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthTest: false, depthWrite: false }));
     hitbox.userData = { partId: maxPart };
     scene.add(hitbox);
     selectableGalaxies.push(hitbox);
 
     setTimeout(() => {
-        gsap.to(finalPlanetMat, { opacity: specialType === 'silence' ? 0.3 : 0.9, duration: 2 });
-        gsap.to(glow1.material, { opacity: specialType === 'silence' ? 0.3 : 0.7, duration: 3 });
-        gsap.to(finalPlanet.scale, { x: 1, y: 1, z: 1, duration: 3, ease: "back.out(1.2)" });
+        gsap.to(coreSprite.material, { opacity: specialType === 'silence' ? 0.4 : 0.7, duration: 2 });
+        gsap.to(coreSprite.scale, { x: specialType === 'silence' ? 5 : 4, y: specialType === 'silence' ? 5 : 4, duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut" });
+        gsap.to(glow1.material, { opacity: specialType === 'silence' ? 0.2 : 0.35, duration: 3 });
         gsap.to(mainGalaxy.scale, { x: 1, y: 1, z: 1, duration: 5, ease: "power2.out" });
         gsap.fromTo(mainGalaxy.rotation, { y: 0 }, { y: Math.PI * 4, duration: 15, ease: "power3.out" });
 

@@ -305,18 +305,18 @@ function explodeToGalaxies(specialType) {
     const colorInt = galaxyColors[maxPart - 1];
     const normalizedScore = Math.min(1, Math.max(0, (score - 8) / 32));
 
-    // 중앙 글로우: 작은 흰 코어 + 은하색 외곽 글로우 (스프라이트만 사용)
-    const coreSprite = new THREE.Sprite(new THREE.SpriteMaterial({
-        map: generateGlowTexture(0xffffff), color: 0xffffff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending
-    }));
-    coreSprite.scale.set(2, 2, 1);
-    scene.add(coreSprite);
+    // 중앙 원(구) + 외곽 글로우
+    const finalPlanetGeom = new THREE.SphereGeometry(specialType === 'silence' ? 1.5 : (0.8 + normalizedScore * 0.8), 64, 64);
+    const finalPlanetMat = new THREE.MeshBasicMaterial({ color: colorInt, transparent: true, opacity: 0 });
+    const finalPlanet = new THREE.Mesh(finalPlanetGeom, finalPlanetMat);
+    finalPlanet.scale.set(0.01, 0.01, 0.01);
+    scene.add(finalPlanet);
 
     const glow1 = new THREE.Sprite(new THREE.SpriteMaterial({
         map: generateGlowTexture(colorInt), color: 0xffffff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending
     }));
     glow1.scale.set(specialType === 'silence' ? 8 : 10, specialType === 'silence' ? 8 : 10, 1);
-    scene.add(glow1);
+    finalPlanet.add(glow1);
 
     const mainGalaxy = createGalaxy(colorInt, score, specialType);
     scene.add(mainGalaxy);
@@ -324,8 +324,9 @@ function explodeToGalaxies(specialType) {
     currentUserType = maxPart;
 
     setTimeout(() => {
-        gsap.to(coreSprite.material, { opacity: specialType === 'silence' ? 0.3 : 0.45, duration: 2 });
-        gsap.to(glow1.material, { opacity: specialType === 'silence' ? 0.15 : 0.22, duration: 3 });
+        gsap.to(finalPlanetMat, { opacity: specialType === 'silence' ? 0.25 : 0.4, duration: 2 });
+        gsap.to(finalPlanet.scale, { x: 1, y: 1, z: 1, duration: 3, ease: "back.out(1.2)" });
+        gsap.to(glow1.material, { opacity: specialType === 'silence' ? 0.2 : 0.3, duration: 3 });
         gsap.to(mainGalaxy.scale, { x: 1, y: 1, z: 1, duration: 5, ease: "power2.out" });
         gsap.fromTo(mainGalaxy.rotation, { y: 0 }, { y: Math.PI * 4, duration: 15, ease: "power3.out" });
 

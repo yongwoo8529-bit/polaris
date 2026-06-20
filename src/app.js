@@ -532,7 +532,7 @@ function showGalaxyDetails(partId) {
         jobsTitle.style.display = "none";
     }
 
-    document.getElementById("modal-disclaimer").innerText = "추천 직업은 약간의 오차가 있을 수도 있습니다";
+    document.getElementById("modal-disclaimer").innerText = "홀랜드 직업적성이론(Holland Career Codes) 기반 · 직업 정보 출처: 커리어넷(한국직업능력연구원) · 결과는 참고용이며 개인차가 있을 수 있습니다";
     document.getElementById("galaxy-modal").classList.add("active");
 }
 

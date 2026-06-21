@@ -9,7 +9,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         html, body {
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             background: #000;
             display: flex;
             flex-direction: column;
@@ -22,43 +23,75 @@
             font-family: 'Orbitron', 'Arial Black', sans-serif;
             font-size: clamp(3rem, 14vw, 7.5rem);
             font-weight: 900;
-            color: #fff;
+            color: #f5f0e8;
             letter-spacing: 10px;
+            display: flex;
+            align-items: center;
             text-shadow:
-                0 0 30px rgba(100, 150, 255, 1),
-                0 0 70px rgba(80, 130, 255, 0.6),
-                0 0 140px rgba(60, 110, 255, 0.3);
-            animation: appear 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+                0 0 18px rgba(255, 215, 140, 0.55),
+                0 0 50px rgba(255, 195, 100, 0.2);
+        }
+
+        #cursor {
+            display: inline-block;
+            width: 4px;
+            height: 0.75em;
+            background: #f5f0e8;
+            margin-left: 6px;
+            border-radius: 2px;
+            animation: blink 0.55s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0; }
         }
 
         #sub {
-            margin-top: 20px;
-            font-family: 'Arial', sans-serif;
-            font-size: clamp(11px, 2.5vw, 14px);
-            color: rgba(255, 255, 255, 0.4);
+            margin-top: 22px;
+            font-size: clamp(11px, 2.4vw, 14px);
+            color: rgba(255, 255, 255, 0.3);
             letter-spacing: 5px;
-            animation: appear 1s ease 0.8s forwards;
             opacity: 0;
-        }
-
-        @keyframes appear {
-            0%   { opacity: 0; transform: scale(0.85) translateY(10px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
+            transition: opacity 0.9s ease;
         }
     </style>
 </head>
 <body>
-    <div id="logo">POLARIS</div>
+    <div id="logo">
+        <span id="typed"></span>
+        <span id="cursor"></span>
+    </div>
     <div id="sub">나만의 진로 은하를 찾아서</div>
 
     <script>
         var code = new URLSearchParams(location.search).get('code');
         var dest = code ? 'polaris.html?code=' + code : 'polaris.html';
-        setTimeout(function () {
-            document.body.style.transition = 'opacity 0.7s ease';
-            document.body.style.opacity = '0';
-            setTimeout(function () { location.replace(dest); }, 700);
-        }, 2300);
+
+        var word  = 'POLARIS';
+        var typed = document.getElementById('typed');
+        var cur   = document.getElementById('cursor');
+        var sub   = document.getElementById('sub');
+        var idx   = 0;
+
+        function type() {
+            if (idx < word.length) {
+                typed.textContent += word[idx++];
+                setTimeout(type, 130);
+            } else {
+                setTimeout(function () {
+                    cur.style.display = 'none';
+                    sub.style.opacity = '1';
+                }, 250);
+                setTimeout(function () {
+                    document.body.style.transition = 'opacity 0.75s ease';
+                    document.body.style.opacity = '0';
+                    setTimeout(function () { location.replace(dest); }, 750);
+                }, 1800);
+            }
+        }
+
+        setTimeout(type, 350);
     </script>
 </body>
 </html>

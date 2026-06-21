@@ -13,7 +13,8 @@ export default defineConfig({
         results_guide: resolve(__dirname, 'results-guide.html'),
         job: resolve(__dirname, 'job.html'),
         jobs: resolve(__dirname, 'jobs.html'),
-        report: resolve(__dirname, 'report.html')
+        report: resolve(__dirname, 'report.html'),
+        teacher: resolve(__dirname, 'teacher.html')
       }
     }
   }

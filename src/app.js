@@ -1,3 +1,9 @@
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+const _sb = createClient(
+    'https://ixouybhxjiijtpyhwhjv.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4b3V5Ymh4amlpanRweWh3aGp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NTI0NDYsImV4cCI6MjA5MTEyODQ0Nn0.TTOQNdFFQNW5OKzb4DkKlWuCL8cSw4zP9DmfpojU47o'
+)
+
 // questions.js (Internal Question Data)
 const questions = [
     // ── Part 1: 탐구의 은하 ── 호기심 / 분석 / 원리 탐구
@@ -326,8 +332,8 @@ function explodeToGalaxies(specialType) {
     starSystems.push(mainGalaxy);
     currentUserType = maxPart;
 
-    // 결과를 PDF 보고서용으로 저장
     const detail = galaxyDetails[maxPart];
+    // PDF 보고서용 로컬 저장
     localStorage.setItem('polaris_result', JSON.stringify({
         maxPart,
         specialType: specialType || null,
@@ -339,6 +345,8 @@ function explodeToGalaxies(specialType) {
         scores: { ...scores },
         timestamp: Date.now()
     }));
+    // 학급 참여 중이면 Supabase에도 저장
+    saveToClass(detail, maxPart);
 
     setTimeout(() => {
         gsap.to(finalPlanetMat, { opacity: specialType === 'silence' ? 0.3 : 0.9, duration: 2 });
@@ -559,6 +567,47 @@ window.closeModal = closeModal;
 
 function openReport() { window.open('report.html', '_blank'); }
 window.openReport = openReport;
+
+// ── 학급 참여 모달 ──
+function openClassModal() {
+    const m = document.getElementById('class-modal');
+    if (m) m.style.display = 'flex';
+}
+window.openClassModal = openClassModal;
+
+async function joinClassAndStart() {
+    const code = document.getElementById('modal-class-code').value.trim().toUpperCase();
+    const name = document.getElementById('modal-student-name').value.trim();
+    const errEl = document.getElementById('modal-error');
+    if (!code || !name) { errEl.textContent = '코드와 이름을 모두 입력해주세요.'; return; }
+    errEl.textContent = '코드 확인 중...';
+    const { data, error } = await _sb.from('classes').select('class_name').eq('code', code).maybeSingle();
+    if (error || !data) { errEl.textContent = '유효하지 않은 학급 코드입니다.'; return; }
+    sessionStorage.setItem('polaris_class', JSON.stringify({ code, name }));
+    document.getElementById('class-modal').style.display = 'none';
+    startSurvey();
+}
+window.joinClassAndStart = joinClassAndStart;
+
+function skipClassAndStart() {
+    sessionStorage.removeItem('polaris_class');
+    document.getElementById('class-modal').style.display = 'none';
+    startSurvey();
+}
+window.skipClassAndStart = skipClassAndStart;
+
+async function saveToClass(detail, maxPart) {
+    const session = JSON.parse(sessionStorage.getItem('polaris_class') || 'null');
+    if (!session) return;
+    const galaxyName = detail.name.replace(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{27BF}]/gu, '').trim();
+    await _sb.from('student_results').insert({
+        class_code: session.code,
+        student_name: session.name,
+        galaxy_type: maxPart,
+        galaxy_name: galaxyName,
+        scores: { ...scores }
+    });
+}
 
 function initStars() {
     starsCanvas = document.getElementById("stars-bg"); if (!starsCanvas) return;

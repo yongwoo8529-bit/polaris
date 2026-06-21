@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>교사 관리 - POLARIS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans KR', sans-serif; background: #f0f2f8; color: #1a1a2e; min-height: 100vh; }
+
+        header {
+            background: #1a1a2e;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+        .logo { color: #fff; font-size: 14px; letter-spacing: 3px; font-weight: 700; }
+        .logo span { color: rgba(255,255,255,0.4); font-size: 12px; letter-spacing: 1px; font-weight: 400; margin-left: 8px; }
+        header a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+        header a:hover { color: #fff; }
+
+        main { max-width: 680px; margin: 32px auto; padding: 0 20px 60px; }
+
+        .tabs {
+            display: flex;
+            background: #fff;
+            border-radius: 14px;
+            padding: 4px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 11px;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: 500;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tab-btn.active { background: #1a1a2e; color: #fff; font-weight: 700; }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+            margin-bottom: 16px;
+        }
+        .card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #f0f0f8;
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: #aaa;
+            letter-spacing: 0.8px;
+            margin-bottom: 7px;
+            margin-top: 16px;
+            text-transform: uppercase;
+        }
+        label:first-of-type { margin-top: 0; }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #e8e8f4;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #1a1a2e;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input[type="text"]:focus { border-color: #4080ff; }
+        input[type="text"]::placeholder { color: #ccc; }
+
+        .btn-primary {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            background: #1a1a2e;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn-primary:hover { opacity: 0.85; }
+        .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        .code-box {
+            display: none;
+            margin-top: 24px;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8f0ff 100%);
+            border: 2px solid #c0d4ff;
+            border-radius: 16px;
+            padding: 28px;
+            text-align: center;
+        }
+        .code-label { font-size: 11px; font-weight: 700; color: #6080c0; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+        .code-value {
+            font-size: 40px;
+            font-weight: 900;
+            letter-spacing: 10px;
+            color: #1a1a2e;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 4px;
+        }
+        .code-class { font-size: 12px; color: #888; margin-bottom: 14px; }
+        .btn-copy {
+            padding: 8px 22px;
+            background: #4080ff;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn-copy:hover { opacity: 0.85; }
+        .code-hint {
+            margin-top: 14px;
+            font-size: 12px;
+            color: #6080c0;
+            line-height: 1.7;
+        }
+
+        .search-row { display: flex; gap: 10px; align-items: stretch; }
+        .search-row input { flex: 1; margin: 0; }
+        .btn-search {
+            padding: 12px 20px;
+            background: #1a1a2e;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: opacity 0.2s;
+        }
+        .btn-search:hover { opacity: 0.85; }
+
+        .results-area { display: none; }
+
+        .class-bar {
+            background: #1a1a2e;
+            border-radius: 14px;
+            padding: 18px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+        .cb-name { font-size: 16px; font-weight: 700; }
+        .cb-teacher { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 3px; }
+        .cb-count { font-size: 32px; font-weight: 900; text-align: right; line-height: 1; }
+        .cb-count-label { font-size: 10px; color: rgba(255,255,255,0.5); text-align: right; margin-top: 2px; }
+
+        .dist-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+        .dist-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .dist-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+        .result-table { width: 100%; border-collapse: collapse; }
+        .result-table thead th {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #bbb;
+            letter-spacing: 0.5px;
+            padding: 0 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f8;
+            text-transform: uppercase;
+        }
+        .result-table tbody tr { border-bottom: 1px solid #f8f8fc; }
+        .result-table tbody tr:last-child { border: none; }
+        .result-table tbody td { padding: 12px; font-size: 13px; color: #333; }
+
+        .galaxy-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+        .badge-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+        .empty-msg { text-align: center; padding: 32px 0; color: #ccc; font-size: 14px; }
+        .error-msg { color: #e05c5c; font-size: 12px; margin-top: 8px; min-height: 18px; }
+        .loading { color: #888; font-size: 12px; margin-top: 8px; }
+
+        @media (max-width: 480px) {
+            main { margin: 16px auto; }
+            .card { padding: 20px; }
+            .code-value { font-size: 30px; letter-spacing: 6px; }
+            .class-bar { flex-direction: column; gap: 8px; }
+            .cb-count { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="logo">POLARIS <span>교사 관리</span></span>
+    <a href="index.html">← 홈으로</a>
+</header>
+
+<main>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('create')">학급 코드 발급</button>
+        <button class="tab-btn" onclick="switchTab('view')">결과 조회</button>
+    </div>
+
+    <!-- 학급 코드 발급 -->
+    <div id="tab-create" class="tab-panel active">
+        <div class="card">
+            <div class="card-title">새 학급 코드 만들기</div>
+            <label>선생님 성함</label>
+            <input type="text" id="teacher-name" placeholder="예: 김진로" maxlength="20">
+            <label>학급명</label>
+            <input type="text" id="class-name" placeholder="예: 2학년 3반" maxlength="30">
+            <p id="create-error" class="error-msg"></p>
+            <button class="btn-primary" id="create-btn" onclick="createClass()">학급 코드 생성하기</button>
+
+            <div class="code-box" id="code-box">
+                <div class="code-label">학급 코드</div>
+                <div class="code-value" id="code-display"></div>
+                <div class="code-class" id="code-class"></div>
+                <button class="btn-copy" onclick="copyCode()">📋 코드 복사</button>
+                <div class="code-hint">
+                    학생들이 검사 시작 전 이 코드를 입력하면<br>
+                    결과가 이 학급에 자동으로 저장됩니다.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 결과 조회 -->
+    <div id="tab-view" class="tab-panel">
+        <div class="card">
+            <div class="card-title">학급 결과 조회</div>
+            <label>학급 코드</label>
+            <div class="search-row">
+                <input type="text" id="view-code" placeholder="예: ABC123" maxlength="6"
+                       style="text-transform:uppercase;"
+                       oninput="this.value=this.value.toUpperCase()"
+                       onkeydown="if(event.key==='Enter') loadResults()">
+                <button class="btn-search" onclick="loadResults()">조회</button>
+            </div>
+            <p id="view-error" class="error-msg"></p>
+        </div>
+
+        <div class="results-area" id="results-area">
+            <div class="class-bar">
+                <div>
+                    <div class="cb-name" id="cb-name"></div>
+                    <div class="cb-teacher" id="cb-teacher"></div>
+                </div>
+                <div>
+                    <div class="cb-count" id="cb-count">0</div>
+                    <div class="cb-count-label">명 참여</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">성향 유형 분포</div>
+                <div class="dist-wrap" id="dist-wrap"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">학생 결과 목록</div>
+                <table class="result-table">
+                    <thead>
+                        <tr>
+                            <th>이름</th>
+                            <th>성향 유형</th>
+                            <th>검사일시</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-tbody"></tbody>
+                </table>
+                <div id="empty-msg" class="empty-msg" style="display:none;">아직 참여한 학생이 없습니다.</div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+const SUPABASE_URL = 'https://ixouybhxjiijtpyhwhjv.supabase.co'
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4b3V5Ymh4amlpanRweWh3aGp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NTI0NDYsImV4cCI6MjA5MTEyODQ0Nn0.TTOQNdFFQNW5OKzb4DkKlWuCL8cSw4zP9DmfpojU47o'
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+const GALAXY = {
+    1: { name: '탐구의 은하', color: '#a55eea', bg: '#f7f0ff', text: '#7a30c0' },
+    2: { name: '질서의 은하', color: '#45aaf2', bg: '#eaf4ff', text: '#1a80d0' },
+    3: { name: '온기의 은하', color: '#fd9644', bg: '#fff4eb', text: '#c05800' },
+    4: { name: '울림의 은하', color: '#f7c52e', bg: '#fffbe8', text: '#907000' },
+    5: { name: '울타리의 은하', color: '#26de81', bg: '#eafff3', text: '#0a9050' },
+    6: { name: '손길의 은하', color: '#e05c5c', bg: '#fff0f0', text: '#b02020' },
+    7: { name: '프리즘의 은하', color: '#9090b0', bg: '#f4f4f8', text: '#505070' },
+    8: { name: '정적의 은하', color: '#5566aa', bg: '#eef0ff', text: '#334488' },
+}
+
+function genCode() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+    return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
+}
+
+window.switchTab = (tab) => {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', tab === 'create' ? i === 0 : i === 1))
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'))
+    document.getElementById('tab-' + tab).classList.add('active')
+}
+
+window.createClass = async () => {
+    const teacher = document.getElementById('teacher-name').value.trim()
+    const cls = document.getElementById('class-name').value.trim()
+    const errEl = document.getElementById('create-error')
+    if (!teacher || !cls) { errEl.textContent = '선생님 성함과 학급명을 모두 입력해주세요.'; return }
+    errEl.textContent = ''
+
+    const btn = document.getElementById('create-btn')
+    btn.disabled = true; btn.textContent = '생성 중...'
+
+    let code
+    for (let i = 0; i < 5; i++) {
+        code = genCode()
+        const { data } = await sb.from('classes').select('code').eq('code', code).maybeSingle()
+        if (!data) break
+    }
+
+    const { error } = await sb.from('classes').insert({ code, teacher_name: teacher, class_name: cls })
+    btn.disabled = false; btn.textContent = '학급 코드 생성하기'
+
+    if (error) { errEl.textContent = '오류가 발생했습니다. 다시 시도해주세요.'; return }
+
+    document.getElementById('code-display').textContent = code
+    document.getElementById('code-class').textContent = `${teacher} 선생님 · ${cls}`
+    document.getElementById('code-box').style.display = 'block'
+    window._lastCode = code
+}
+
+window.copyCode = () => {
+    navigator.clipboard.writeText(window._lastCode || '').then(() => {
+        const btn = document.querySelector('.btn-copy')
+        const orig = btn.textContent
+        btn.textContent = '✅ 복사됨'
+        setTimeout(() => btn.textContent = orig, 1600)
+    })
+}
+
+window.loadResults = async () => {
+    const code = document.getElementById('view-code').value.trim().toUpperCase()
+    const errEl = document.getElementById('view-error')
+    if (code.length < 6) { errEl.textContent = '6자리 학급 코드를 입력해주세요.'; return }
+    errEl.textContent = '조회 중...'
+
+    const { data: cls, error: clsErr } = await sb.from('classes').select('*').eq('code', code).maybeSingle()
+    if (clsErr || !cls) { errEl.textContent = '존재하지 않는 학급 코드입니다.'; return }
+
+    const { data: rows, error: rowErr } = await sb.from('student_results')
+        .select('*').eq('class_code', code).order('created_at', { ascending: false })
+    if (rowErr) { errEl.textContent = '결과를 불러오는 중 오류가 발생했습니다.'; return }
+
+    errEl.textContent = ''
+
+    document.getElementById('cb-name').textContent = cls.class_name
+    document.getElementById('cb-teacher').textContent = cls.teacher_name + ' 선생님'
+    document.getElementById('cb-count').textContent = rows.length
+
+    const counts = {}
+    rows.forEach(r => { counts[r.galaxy_type] = (counts[r.galaxy_type] || 0) + 1 })
+    document.getElementById('dist-wrap').innerHTML = Object.entries(counts)
+        .sort((a, b) => b[1] - a[1])
+        .map(([t, n]) => {
+            const g = GALAXY[t] || GALAXY[1]
+            return `<div class="dist-chip" style="background:${g.bg};color:${g.text};">
+                <span class="dist-dot" style="background:${g.color};"></span>
+                ${g.name} <strong>${n}명</strong>
+            </div>`
+        }).join('') || '<span style="color:#ccc;font-size:13px;">없음</span>'
+
+    const tbody = document.getElementById('results-tbody')
+    if (rows.length === 0) {
+        tbody.innerHTML = ''
+        document.getElementById('empty-msg').style.display = 'block'
+    } else {
+        document.getElementById('empty-msg').style.display = 'none'
+        tbody.innerHTML = rows.map(r => {
+            const g = GALAXY[r.galaxy_type] || GALAXY[1]
+            const date = new Date(r.created_at).toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+            return `<tr>
+                <td><strong>${r.student_name}</strong></td>
+                <td><span class="galaxy-badge" style="background:${g.bg};color:${g.text};">
+                    <span class="badge-dot" style="background:${g.color};"></span>${g.name}
+                </span></td>
+                <td style="color:#bbb;font-size:12px;">${date}</td>
+            </tr>`
+        }).join('')
+    }
+
+    document.getElementById('results-area').style.display = 'block'
+}
+</script>
+</body>
+</html>

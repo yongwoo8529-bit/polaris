@@ -29,21 +29,16 @@
                 0 0 30px rgba(100,150,255,1),
                 0 0 70px rgba(80,130,255,0.55),
                 0 0 140px rgba(60,110,255,0.25);
-            animation: logoPop 0.9s cubic-bezier(0.22,1,0.36,1) both;
+            animation: logoPop 1s cubic-bezier(0.22,1,0.36,1) forwards;
         }
         #loader-sub {
             font-size: clamp(10px, 2.2vw, 13px);
             color: rgba(255,255,255,0.38);
             letter-spacing: 5px;
-            animation: subFade 0.7s ease 0.7s both;
         }
         @keyframes logoPop {
-            0%   { opacity: 0; transform: scale(0.88); filter: blur(12px); }
-            100% { opacity: 1; transform: scale(1);    filter: blur(0); }
-        }
-        @keyframes subFade {
-            0%   { opacity: 0; }
-            100% { opacity: 1; }
+            0%   { transform: scale(0.82); filter: blur(14px); }
+            100% { transform: scale(1);    filter: blur(0); }
         }
     </style>
     <!-- Google tag (gtag.js) -->

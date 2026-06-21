@@ -275,6 +275,8 @@ function checkPw() {
     <div id="tab-create" class="tab-panel active">
         <div class="card">
             <div class="card-title">새 학급 코드 만들기</div>
+            <label>학교명</label>
+            <input type="text" id="school-name" placeholder="예: 한빛중학교" maxlength="30">
             <label>선생님 성함</label>
             <input type="text" id="teacher-name" placeholder="예: 김진로" maxlength="20">
             <label>학급명</label>
@@ -404,9 +406,9 @@ window.switchTab = (tab) => {
     if (tab !== 'view' && _refreshTimer) { clearInterval(_refreshTimer); _refreshTimer = null }
 }
 
-function showCodeBox(code, teacher, cls, isExisting) {
+function showCodeBox(code, school, teacher, cls, isExisting) {
     document.getElementById('code-display').textContent = code
-    document.getElementById('code-class').textContent = `${teacher} 선생님 · ${cls}`
+    document.getElementById('code-class').textContent = `${school} · ${teacher} 선생님 · ${cls}`
     const statusEl = document.getElementById('code-status')
     if (isExisting) {
         statusEl.textContent = '✅ 이미 만들어진 학급입니다 — 기존 코드를 불러왔습니다.'
@@ -424,29 +426,31 @@ function showCodeBox(code, teacher, cls, isExisting) {
 }
 
 window.createClass = async () => {
+    const school = document.getElementById('school-name').value.trim()
     const teacher = document.getElementById('teacher-name').value.trim()
     const cls = document.getElementById('class-name').value.trim()
     const errEl = document.getElementById('create-error')
-    if (!teacher || !cls) { errEl.textContent = '선생님 성함과 학급명을 모두 입력해주세요.'; return }
+    if (!school || !teacher || !cls) { errEl.textContent = '학교명, 선생님 성함, 학급명을 모두 입력해주세요.'; return }
     errEl.textContent = ''
 
     const btn = document.getElementById('create-btn')
     btn.disabled = true; btn.textContent = '확인 중...'
 
-    // 이미 존재하는 학급인지 확인
+    // 학교 + 선생님 + 학급 셋 다 일치하면 기존 코드 불러오기
     const { data: existing } = await sb.from('classes')
         .select('code')
+        .eq('school_name', school)
         .eq('teacher_name', teacher)
         .eq('class_name', cls)
         .maybeSingle()
 
     if (existing) {
         btn.disabled = false; btn.textContent = '학급 코드 생성하기'
-        showCodeBox(existing.code, teacher, cls, true)
+        showCodeBox(existing.code, school, teacher, cls, true)
         return
     }
 
-    // 새 코드 생성
+    // 하나라도 다르면 새 코드 생성
     let code
     for (let i = 0; i < 5; i++) {
         code = genCode()
@@ -454,12 +458,12 @@ window.createClass = async () => {
         if (!data) break
     }
 
-    const { error } = await sb.from('classes').insert({ code, teacher_name: teacher, class_name: cls })
+    const { error } = await sb.from('classes').insert({ code, school_name: school, teacher_name: teacher, class_name: cls })
     btn.disabled = false; btn.textContent = '학급 코드 생성하기'
 
     if (error) { errEl.textContent = '오류가 발생했습니다. 다시 시도해주세요.'; return }
 
-    showCodeBox(code, teacher, cls, false)
+    showCodeBox(code, school, teacher, cls, false)
 }
 
 window.copyCode = () => {

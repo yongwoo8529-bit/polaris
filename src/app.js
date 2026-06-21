@@ -622,13 +622,13 @@ async function saveToClass(detail, maxPart) {
     const session = JSON.parse(sessionStorage.getItem('polaris_class') || 'null');
     if (!session) return;
     const galaxyName = detail.name.replace(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{27BF}]/gu, '').trim();
-    await _sb.from('student_results').insert({
+    await _sb.from('student_results').upsert({
         class_code: session.code,
         student_name: session.name,
         galaxy_type: maxPart,
         galaxy_name: galaxyName,
         scores: { ...scores }
-    });
+    }, { onConflict: 'class_code,student_name' });
 }
 
 function initStars() {

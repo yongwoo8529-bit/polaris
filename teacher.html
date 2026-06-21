@@ -252,14 +252,12 @@ const _PW = 'polaris2026';
 function checkPw() {
     if (document.getElementById('pw-input').value === _PW) {
         document.getElementById('pw-gate').style.display = 'none';
-        sessionStorage.setItem('t_auth', '1');
     } else {
         document.getElementById('pw-error').textContent = '비밀번호가 맞지 않습니다.';
         document.getElementById('pw-input').value = '';
         document.getElementById('pw-input').focus();
     }
 }
-if (sessionStorage.getItem('t_auth') === '1') document.getElementById('pw-gate').style.display = 'none';
 </script>
 
 <header>

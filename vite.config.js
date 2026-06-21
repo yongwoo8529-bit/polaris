@@ -15,7 +15,8 @@ export default defineConfig({
         jobs: resolve(__dirname, 'jobs.html'),
         report: resolve(__dirname, 'report.html'),
         teacher: resolve(__dirname, 'teacher.html'),
-        splash: resolve(__dirname, 'splash.html')
+        splash: resolve(__dirname, 'splash.html'),
+        manual: resolve(__dirname, 'manual.html')
       }
     }
   }

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POLARIS 교사용 매뉴얼</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #eef0f4;
+            color: #1a1a2e;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .screen-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 52px;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 100;
+        }
+        .screen-bar-logo { color: #fff; font-size: 13px; letter-spacing: 3px; font-weight: 700; }
+        .btn-print {
+            background: #4d8fff; color: #fff; border: none;
+            padding: 8px 20px; border-radius: 20px;
+            font-size: 13px; font-weight: 700; cursor: pointer;
+            font-family: inherit;
+        }
+        .btn-print:hover { opacity: 0.85; }
+
+        .page {
+            width: 210mm;
+            margin: 68px auto 40px;
+            background: #fff;
+            box-shadow: 0 6px 40px rgba(0,0,0,0.15);
+            padding: 14mm 18mm 16mm;
+        }
+
+        /* 헤더 */
+        .doc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-bottom: 6mm;
+            border-bottom: 3px solid #4d8fff;
+            margin-bottom: 8mm;
+        }
+        .doc-logo { font-size: 22px; font-weight: 900; letter-spacing: 4px; color: #1a1a2e; }
+        .doc-title { font-size: 13px; color: #888; margin-top: 4px; letter-spacing: 0.5px; }
+        .doc-meta { text-align: right; font-size: 10.5px; color: #aaa; line-height: 1.8; }
+
+        /* 섹션 */
+        .section { margin-bottom: 8mm; }
+        .section-title {
+            font-size: 10px; font-weight: 700; color: #aaa;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            margin-bottom: 4mm; padding-bottom: 2mm;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* 개요 박스 */
+        .overview-box {
+            background: #f0f5ff;
+            border-left: 4px solid #4d8fff;
+            border-radius: 0 8px 8px 0;
+            padding: 4mm 5mm;
+            margin-bottom: 5mm;
+        }
+        .overview-box p { font-size: 12px; color: #333; line-height: 1.8; }
+
+        /* 흐름도 */
+        .flow {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 6mm;
+            flex-wrap: wrap;
+            gap: 3px;
+        }
+        .flow-step {
+            background: #1a1a2e;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .flow-arrow { color: #4d8fff; font-size: 14px; margin: 0 4px; font-weight: 700; }
+
+        /* 스텝 */
+        .steps { display: flex; flex-direction: column; gap: 4mm; }
+        .step {
+            display: flex;
+            gap: 4mm;
+            align-items: flex-start;
+        }
+        .step-num {
+            width: 22px; height: 22px;
+            background: #4d8fff;
+            color: #fff;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .step-body { flex: 1; }
+        .step-title { font-size: 12.5px; font-weight: 700; color: #1a1a2e; margin-bottom: 2px; }
+        .step-desc { font-size: 11.5px; color: #555; line-height: 1.75; }
+        .step-tip {
+            display: inline-block;
+            margin-top: 4px;
+            background: #fff8e8;
+            border: 1px solid #ffd060;
+            border-radius: 5px;
+            padding: 3px 8px;
+            font-size: 10.5px;
+            color: #8a6000;
+        }
+        .step-warn {
+            display: inline-block;
+            margin-top: 4px;
+            background: #fff0f0;
+            border: 1px solid #ffb0b0;
+            border-radius: 5px;
+            padding: 3px 8px;
+            font-size: 10.5px;
+            color: #a02020;
+        }
+
+        /* 2컬럼 */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; margin-bottom: 5mm; }
+        .info-card {
+            border: 1px solid #e8e8ee;
+            border-radius: 8px;
+            padding: 4mm;
+        }
+        .info-card-title {
+            font-size: 11px; font-weight: 700;
+            color: #4d8fff; margin-bottom: 3mm;
+            padding-bottom: 2mm;
+            border-bottom: 1px solid #eef;
+        }
+        .info-card ul { padding-left: 14px; }
+        .info-card li { font-size: 11px; color: #444; margin-bottom: 2px; }
+
+        /* 비밀번호 박스 */
+        .pw-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1a1a2e;
+            color: #fff;
+            border-radius: 8px;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 4px 0;
+        }
+        .pw-label { font-size: 10px; font-weight: 400; opacity: 0.6; }
+
+        /* URL 박스 */
+        .url-box {
+            background: #f5f5f8;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 11px;
+            color: #4d8fff;
+            font-family: monospace;
+            display: inline-block;
+            margin: 3px 0;
+        }
+
+        /* FAQ */
+        .faq-item { margin-bottom: 4mm; }
+        .faq-q { font-size: 12px; font-weight: 700; color: #1a1a2e; margin-bottom: 1mm; }
+        .faq-q::before { content: 'Q. '; color: #4d8fff; }
+        .faq-a { font-size: 11.5px; color: #555; padding-left: 16px; }
+        .faq-a::before { content: 'A. '; color: #888; }
+
+        /* 하단 */
+        .doc-footer {
+            margin-top: 8mm;
+            padding-top: 4mm;
+            border-top: 1px solid #eee;
+            font-size: 10px;
+            color: #bbb;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* 인쇄 */
+        @media print {
+            body { background: #fff; }
+            .screen-bar { display: none; }
+            .page { margin: 0; box-shadow: none; width: 100%; padding: 12mm 16mm; }
+        }
+        @page { size: A4; margin: 0; }
+    </style>
+</head>
+<body>
+
+<div class="screen-bar">
+    <span class="screen-bar-logo">POLARIS</span>
+    <button class="btn-print" onclick="window.print()">🖨️ 인쇄 / PDF 저장</button>
+</div>
+
+<div class="page">
+
+    <!-- 헤더 -->
+    <div class="doc-header">
+        <div>
+            <div class="doc-logo">POLARIS</div>
+            <div class="doc-title">교사용 운영 매뉴얼 · Teacher's Guide</div>
+        </div>
+        <div class="doc-meta">
+            홀랜드 직업적성이론(RIASEC) 기반<br>
+            직업 정보: 커리어넷(한국직업능력연구원)
+        </div>
+    </div>
+
+    <!-- 서비스 개요 -->
+    <div class="section">
+        <div class="section-title">서비스 개요</div>
+        <div class="overview-box">
+            <p>
+                POLARIS는 홀랜드 직업적성이론을 기반으로 한 <strong>48문항 진로성향 검사 도구</strong>입니다.
+                학생이 검사를 완료하면 6가지 성향 점수가 산출되고, 결과가 <strong>3D 은하계</strong>로 시각화됩니다.
+                교사는 학급 코드를 발급해 학생 결과를 실시간으로 확인하고 PDF·Excel로 내보낼 수 있습니다.
+            </p>
+        </div>
+
+        <div class="flow">
+            <div class="flow-step">① 학급 코드 발급</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">② QR 배포</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">③ 학생 검사</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">④ 결과 실시간 확인</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">⑤ PDF · Excel 저장</div>
+        </div>
+    </div>
+
+    <!-- STEP 1: 교사 대시보드 접속 -->
+    <div class="section">
+        <div class="section-title">Step 1 · 교사 대시보드 접속</div>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                    <div class="step-title">대시보드 URL 접속</div>
+                    <div class="step-desc">
+                        아래 주소로 접속하거나, 랜딩 페이지 하단 <strong>교사 입장 →</strong> 링크를 클릭합니다.<br>
+                        <span class="url-box">https://polaris-umber.vercel.app/teacher.html</span>
+                    </div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                    <div class="step-title">비밀번호 입력</div>
+                    <div class="step-desc">
+                        접속 시마다 비밀번호를 입력합니다.<br>
+                        <span class="pw-box"><span class="pw-label">PW</span> polaris2026</span>
+                    </div>
+                    <span class="step-warn">비밀번호는 외부에 공유하지 마세요.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 2: 학급 코드 발급 -->
+    <div class="section">
+        <div class="section-title">Step 2 · 학급 코드 발급</div>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                    <div class="step-title">학급 코드 발급 탭 선택</div>
+                    <div class="step-desc">대시보드 상단 <strong>학급 코드 발급</strong> 탭을 클릭합니다.</div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                    <div class="step-title">정보 입력 후 생성</div>
+                    <div class="step-desc">
+                        <strong>학교명 · 선생님 성함 · 학급명</strong>을 입력하고 <strong>학급 코드 생성하기</strong>를 클릭합니다.<br>
+                        세 항목이 모두 일치하는 학급이 이미 있으면 기존 코드를 불러옵니다.
+                    </div>
+                    <span class="step-tip">같은 학교·교사·학급으로 재접속하면 항상 동일한 코드가 나옵니다.</span>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                    <div class="step-title">QR 코드 인쇄</div>
+                    <div class="step-desc">생성된 코드 하단 <strong>QR 인쇄</strong> 버튼을 눌러 A4 용지에 출력하거나 화면에 띄워 학생들이 스캔하도록 합니다.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 3: 학생 참여 안내 -->
+    <div class="section">
+        <div class="section-title">Step 3 · 학생 참여 방법</div>
+        <div class="two-col">
+            <div class="info-card">
+                <div class="info-card-title">📱 QR 코드 스캔 (권장)</div>
+                <ul>
+                    <li>스마트폰 카메라로 QR 스캔</li>
+                    <li>학급 코드 자동 입력됨</li>
+                    <li>이름 입력 후 개인정보 동의</li>
+                    <li>검사 시작</li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <div class="info-card-title">⌨️ 코드 직접 입력</div>
+                <ul>
+                    <li>학생이 polaris.html 직접 접속</li>
+                    <li>학급 코드 6자리 수동 입력</li>
+                    <li>이름 입력 후 개인정보 동의</li>
+                    <li>검사 시작</li>
+                </ul>
+            </div>
+        </div>
+        <div class="step-tip">검사 소요 시간: 약 10~15분 / 총 48문항 (6파트 × 8문항)</div>
+    </div>
+
+    <!-- STEP 4: 결과 확인 -->
+    <div class="section">
+        <div class="section-title">Step 4 · 결과 실시간 확인</div>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                    <div class="step-title">결과 조회 탭 선택</div>
+                    <div class="step-desc">대시보드 상단 <strong>결과 조회</strong> 탭 → 학급 코드 6자리 입력 → <strong>조회하기</strong> 클릭</div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                    <div class="step-title">실시간 갱신 확인</div>
+                    <div class="step-desc">결과 목록은 <strong>10초마다 자동 갱신</strong>됩니다. 수업 중 학생들이 제출하면 즉시 반영됩니다.</div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                    <div class="step-title">개별 PDF 저장</div>
+                    <div class="step-desc">각 학생 행 오른쪽 <strong>[PDF]</strong> 버튼 → 새 탭에서 보고서 열림 → 인쇄 / PDF 저장</div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-body">
+                    <div class="step-title">전체 Excel 내보내기</div>
+                    <div class="step-desc">목록 상단 <strong>[📊 Excel 내보내기]</strong> 클릭 → <code>POLARIS_학급코드_결과.csv</code> 파일 다운로드</div>
+                    <span class="step-tip">엑셀에서 열면 이름·성향유형·6파트 점수·날짜가 열 형태로 정리됩니다.</span>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">5</div>
+                <div class="step-body">
+                    <div class="step-title">학생 데이터 삭제</div>
+                    <div class="step-desc">각 행 오른쪽 <strong>[삭제]</strong> 버튼으로 오입력된 데이터를 제거할 수 있습니다.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 자주 묻는 질문 -->
+    <div class="section">
+        <div class="section-title">자주 묻는 질문</div>
+        <div class="faq-item">
+            <div class="faq-q">학생이 실수로 이름을 잘못 입력하고 제출했어요.</div>
+            <div class="faq-a">결과 조회 화면에서 해당 행의 [삭제] 버튼으로 제거한 뒤, 학생에게 다시 검사하도록 안내하세요.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-q">같은 학생이 두 번 제출하면 어떻게 되나요?</div>
+            <div class="faq-a">같은 학급 코드 + 이름 조합으로 재제출 시 이전 결과를 덮어씁니다. 중복 데이터는 생기지 않습니다.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-q">학급 코드를 잊어버렸어요.</div>
+            <div class="faq-a">동일한 학교명·선생님 성함·학급명을 입력하면 기존 코드를 다시 불러옵니다.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-q">모바일에서 PDF 저장이 안 돼요.</div>
+            <div class="faq-a">iOS는 Safari 브라우저 → 공유 → 파일에 저장, Android는 Chrome → 인쇄 → PDF로 저장을 선택하세요.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-q">학생 검사는 어떤 기기로 해야 하나요?</div>
+            <div class="faq-a">스마트폰, 태블릿, PC 모두 가능합니다. QR 스캔은 스마트폰 카메라 앱을 사용하세요.</div>
+        </div>
+    </div>
+
+    <!-- 하단 -->
+    <div class="doc-footer">
+        <span>POLARIS · 홀랜드 직업적성이론(RIASEC) 기반 진로성향 검사 · 직업 정보 출처: 커리어넷(한국직업능력연구원)</span>
+        <span>© 2026</span>
+    </div>
+
+</div>
+
+</body>
+</html>

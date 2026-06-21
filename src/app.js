@@ -573,7 +573,28 @@ function openClassModal() {
         const inp = document.getElementById('modal-class-code');
         if (inp) inp.value = urlCode.toUpperCase();
     }
+    // 모달 열릴 때 동의 체크박스 초기화
+    const cb = document.getElementById('consent-check');
+    if (cb) { cb.checked = false; onConsentChange(); }
 }
+
+function onConsentChange() {
+    const agreed = document.getElementById('consent-check')?.checked;
+    const joinBtn = document.getElementById('modal-join-btn');
+    const skipBtn = document.getElementById('modal-skip-btn');
+    if (joinBtn) {
+        joinBtn.disabled = !agreed;
+        joinBtn.style.opacity = agreed ? '1' : '0.4';
+        joinBtn.style.cursor = agreed ? 'pointer' : 'not-allowed';
+    }
+    if (skipBtn) {
+        skipBtn.disabled = !agreed;
+        skipBtn.style.color = agreed ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.25)';
+        skipBtn.style.borderColor = agreed ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.1)';
+        skipBtn.style.cursor = agreed ? 'pointer' : 'not-allowed';
+    }
+}
+window.onConsentChange = onConsentChange;
 window.openClassModal = openClassModal;
 
 async function joinClassAndStart() {

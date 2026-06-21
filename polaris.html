@@ -190,9 +190,19 @@
                    style="width:100%; padding:12px 14px; margin-bottom:10px; background:rgba(255,255,255,0.07); border:1.5px solid rgba(255,255,255,0.18); border-radius:10px; color:#fff; font-size:15px; text-align:center; letter-spacing:4px; text-transform:uppercase; outline:none; font-family:inherit;">
             <input id="modal-student-name" type="text" placeholder="이름" maxlength="20"
                    style="width:100%; padding:12px 14px; margin-bottom:6px; background:rgba(255,255,255,0.07); border:1.5px solid rgba(255,255,255,0.18); border-radius:10px; color:#fff; font-size:14px; text-align:center; outline:none; font-family:inherit;">
+            <div style="text-align:left; margin-bottom:12px; padding:12px 14px; background:rgba(255,255,255,0.05); border-radius:10px; border:1px solid rgba(255,255,255,0.1);">
+                <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
+                    <input type="checkbox" id="consent-check" onchange="onConsentChange()" style="margin-top:3px; accent-color:#4080ff; width:15px; height:15px; flex-shrink:0;">
+                    <span style="font-size:12px; color:rgba(255,255,255,0.55); line-height:1.7;">
+                        [필수] 개인정보 수집·이용에 동의합니다.<br>
+                        <span style="font-size:11px; color:rgba(255,255,255,0.3);">수집 항목: 이름, 검사 응답 결과&nbsp;·&nbsp;목적: 진로탐색 결과 제공</span><br>
+                        <a href="privacy.html" target="_blank" style="font-size:11px; color:rgba(100,160,255,0.65); text-decoration:none;">개인정보 처리방침 보기 →</a>
+                    </span>
+                </label>
+            </div>
             <p id="modal-error" style="font-size:12px; color:#e05c5c; min-height:18px; margin-bottom:10px;"></p>
-            <button onclick="joinClassAndStart()" style="width:100%; padding:13px; margin-bottom:10px; background:#4080ff; color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:700; font-family:inherit; cursor:pointer;">참여하기</button>
-            <button onclick="skipClassAndStart()" style="width:100%; padding:11px; background:transparent; color:rgba(255,255,255,0.4); border:1px solid rgba(255,255,255,0.14); border-radius:10px; font-size:13px; font-family:inherit; cursor:pointer;">코드 없이 시작</button>
+            <button id="modal-join-btn" onclick="joinClassAndStart()" disabled style="width:100%; padding:13px; margin-bottom:10px; background:#4080ff; color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:700; font-family:inherit; cursor:not-allowed; opacity:0.4;">참여하기</button>
+            <button id="modal-skip-btn" onclick="skipClassAndStart()" disabled style="width:100%; padding:11px; background:transparent; color:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.1); border-radius:10px; font-size:13px; font-family:inherit; cursor:not-allowed;">코드 없이 시작</button>
         </div>
     </div>
 

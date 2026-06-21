@@ -326,6 +326,9 @@ function checkPw() {
                     <div class="cb-count-label">명 참여</div>
                 </div>
             </div>
+            <div id="auto-refresh-bar" style="font-size:11px; color:#aaa; text-align:right; margin-bottom:10px; margin-top:-8px;">
+                🔄 자동 갱신 중 &nbsp;·&nbsp; <span id="last-updated">-</span>
+            </div>
 
             <div class="card">
                 <div class="card-title">성향 유형 분포</div>
@@ -373,10 +376,14 @@ function genCode() {
     return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
 }
 
+let _refreshTimer = null
+let _activeCode = null
+
 window.switchTab = (tab) => {
     document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', tab === 'create' ? i === 0 : i === 1))
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'))
     document.getElementById('tab-' + tab).classList.add('active')
+    if (tab !== 'view' && _refreshTimer) { clearInterval(_refreshTimer); _refreshTimer = null }
 }
 
 window.createClass = async () => {
@@ -437,23 +444,11 @@ window.printQr = () => {
     w.document.close()
 }
 
-window.loadResults = async () => {
-    const code = document.getElementById('view-code').value.trim().toUpperCase()
-    const errEl = document.getElementById('view-error')
-    if (code.length < 6) { errEl.textContent = '6자리 학급 코드를 입력해주세요.'; return }
-    errEl.textContent = '조회 중...'
-
-    const { data: cls, error: clsErr } = await sb.from('classes').select('*').eq('code', code).maybeSingle()
-    if (clsErr || !cls) { errEl.textContent = '존재하지 않는 학급 코드입니다.'; return }
-
-    const { data: rows, error: rowErr } = await sb.from('student_results')
+async function fetchAndRender(code) {
+    const { data: rows, error } = await sb.from('student_results')
         .select('*').eq('class_code', code).order('created_at', { ascending: false })
-    if (rowErr) { errEl.textContent = '결과를 불러오는 중 오류가 발생했습니다.'; return }
+    if (error || !rows) return
 
-    errEl.textContent = ''
-
-    document.getElementById('cb-name').textContent = cls.class_name
-    document.getElementById('cb-teacher').textContent = cls.teacher_name + ' 선생님'
     document.getElementById('cb-count').textContent = rows.length
 
     const counts = {}
@@ -487,7 +482,29 @@ window.loadResults = async () => {
         }).join('')
     }
 
+    document.getElementById('last-updated').textContent =
+        new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+}
+
+window.loadResults = async () => {
+    const code = document.getElementById('view-code').value.trim().toUpperCase()
+    const errEl = document.getElementById('view-error')
+    if (code.length < 6) { errEl.textContent = '6자리 학급 코드를 입력해주세요.'; return }
+    errEl.textContent = '조회 중...'
+
+    const { data: cls, error: clsErr } = await sb.from('classes').select('*').eq('code', code).maybeSingle()
+    if (clsErr || !cls) { errEl.textContent = '존재하지 않는 학급 코드입니다.'; return }
+    errEl.textContent = ''
+
+    document.getElementById('cb-name').textContent = cls.class_name
+    document.getElementById('cb-teacher').textContent = cls.teacher_name + ' 선생님'
     document.getElementById('results-area').style.display = 'block'
+
+    _activeCode = code
+    await fetchAndRender(code)
+
+    if (_refreshTimer) clearInterval(_refreshTimer)
+    _refreshTimer = setInterval(() => fetchAndRender(_activeCode), 10000)
 }
 </script>
 </body>

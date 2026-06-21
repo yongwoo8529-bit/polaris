@@ -572,6 +572,11 @@ window.openReport = openReport;
 function openClassModal() {
     const m = document.getElementById('class-modal');
     if (m) m.style.display = 'flex';
+    const urlCode = new URLSearchParams(location.search).get('code');
+    if (urlCode) {
+        const inp = document.getElementById('modal-class-code');
+        if (inp) inp.value = urlCode.toUpperCase();
+    }
 }
 window.openClassModal = openClassModal;
 

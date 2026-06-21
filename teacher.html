@@ -287,9 +287,14 @@ function checkPw() {
                 <div class="code-value" id="code-display"></div>
                 <div class="code-class" id="code-class"></div>
                 <button class="btn-copy" onclick="copyCode()">📋 코드 복사</button>
-                <div class="code-hint">
-                    학생들이 검사 시작 전 이 코드를 입력하면<br>
-                    결과가 이 학급에 자동으로 저장됩니다.
+
+                <div style="margin-top:20px; padding-top:20px; border-top:1px solid #d0dcff;">
+                    <div style="font-size:11px; font-weight:700; color:#6080c0; letter-spacing:1px; margin-bottom:12px;">학생용 QR 코드</div>
+                    <img id="qr-img" src="" alt="QR코드" style="width:160px; height:160px; border-radius:10px; display:block; margin:0 auto;">
+                    <div style="font-size:11px; color:#aaa; margin-top:8px; line-height:1.6;">
+                        스캔하면 검사 페이지로 바로 이동<br>학급 코드가 자동으로 채워집니다
+                    </div>
+                    <button onclick="printQr()" style="margin-top:12px; padding:7px 18px; background:transparent; border:1.5px solid #c0d0ff; border-radius:20px; color:#4060cc; font-size:12px; font-weight:700; font-family:inherit; cursor:pointer;">🖨️ QR 인쇄</button>
                 </div>
             </div>
         </div>
@@ -400,6 +405,12 @@ window.createClass = async () => {
     document.getElementById('code-class').textContent = `${teacher} 선생님 · ${cls}`
     document.getElementById('code-box').style.display = 'block'
     window._lastCode = code
+
+    // QR 코드 생성 (학생 스캔 시 polaris.html?code=XXX 로 이동)
+    const targetUrl = new URL('polaris.html?code=' + code, location.href).href
+    document.getElementById('qr-img').src =
+        'https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=10&data=' + encodeURIComponent(targetUrl)
+    window._qrUrl = targetUrl
 }
 
 window.copyCode = () => {
@@ -409,6 +420,21 @@ window.copyCode = () => {
         btn.textContent = '✅ 복사됨'
         setTimeout(() => btn.textContent = orig, 1600)
     })
+}
+
+window.printQr = () => {
+    const code = window._lastCode || ''
+    const img = document.getElementById('qr-img').src
+    const w = window.open('', '_blank', 'width=400,height=520')
+    w.document.write(`<!DOCTYPE html><html><head><title>POLARIS QR - ${code}</title>
+    <style>body{font-family:sans-serif;text-align:center;padding:40px;} h1{font-size:14px;letter-spacing:3px;margin-bottom:4px;} p{font-size:12px;color:#888;margin:4px 0;} img{width:220px;height:220px;margin:16px 0;display:block;margin-left:auto;margin-right:auto;} .code{font-size:28px;font-weight:900;letter-spacing:8px;font-family:monospace;margin:8px 0;} .hint{font-size:11px;color:#aaa;margin-top:8px;line-height:1.6;}</style>
+    </head><body onload="window.print()">
+    <h1>POLARIS</h1><p>진로성향 검사</p>
+    <img src="${img}">
+    <div class="code">${code}</div>
+    <div class="hint">QR을 스캔하거나 위 코드를 입력해 검사를 시작하세요</div>
+    </body></html>`)
+    w.document.close()
 }
 
 window.loadResults = async () => {

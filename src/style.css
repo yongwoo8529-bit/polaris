@@ -422,6 +422,14 @@ h1, h2, h3 {
 }
 
 /* Result Canvas */
+/* #result 은 3D 전체화면 — app-container(430px) 제약을 벗어나 뷰포트 전체를 채운다 */
+section#result {
+    width: 100vw;
+    max-width: 100vw;
+    left: calc(50% - 50vw);
+    overflow: hidden;
+}
+
 #result-container {
     background: #000;
 }

@@ -190,7 +190,6 @@ async function showResult() {
                 // INITIAL UI PHASE
                 document.getElementById("result-title").innerText = "당신만의 북극성이 만들어졌습니다!";
                 document.getElementById("result-desc").innerText = "북극성을 클릭해주세요 ✨";
-                document.getElementById("explore-btn").style.display = "inline-block";
                 document.getElementById("result-ui").classList.add("visible");
             }, 2000);
         }, 1000);
@@ -286,7 +285,6 @@ function initThreeJS(polarisColor, specialType) {
 
 function explodeToGalaxies(specialType) {
     isPolarisClicked = true;
-    document.getElementById("explore-btn").style.display = "none";
     gsap.to(document.getElementById("result-ui"), { opacity: 0, duration: 0.5 });
     createShatteredImplosion(centralPolaris.position, centralPolaris.material.color, specialType);
     gsap.to(centralPolaris.scale, { x: 0, y: 0, z: 0, duration: 0.8, ease: "power4.in" });
@@ -561,11 +559,6 @@ window.closeModal = closeModal;
 
 function openReport() { window.open('report.html', '_blank'); }
 window.openReport = openReport;
-
-function triggerExplode() {
-    if (!isPolarisClicked) explodeToGalaxies(currentSpecialType);
-}
-window.triggerExplode = triggerExplode;
 
 function initStars() {
     starsCanvas = document.getElementById("stars-bg"); if (!starsCanvas) return;

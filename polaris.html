@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9406423137638957"
-     crossorigin="anonymous"></script>
-    <title>POLARIS - 당신의 내면의 길을 찾아서</title>
-    <meta name="description" content="청소년들의 진짜 꿈과 가치를 찾기 위한 탐험, 북극성(Polaris) 프로젝트">
+    <title>POLARIS - 나만의 진로 은하 찾기</title>
+    <meta name="description" content="홀랜드 6유형 기반 48문항 진로검사. 내 성향을 3D 은하계로 시각화합니다.">
     <link rel="stylesheet" href="src/style.css">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DDVCLM11CG"></script>
@@ -51,9 +49,8 @@
         <section id="landing" class="section active">
             <h1>당신만의 북극성을 찾으세요</h1>
             <p>
-                공부라는 정해진 틀에서 벗어나, <br>
-                당신이 진정으로 무엇을 원하고 잘하는지 <br>
-                은하계의 별들을 통해 발견해 보세요.
+                내 성향이 어떤 직업과 맞는지 알고 싶었나요?<br>
+                48가지 질문에 답하면 나만의 3D 진로 은하가 완성됩니다.
             </p>
             <button class="btn-start" onclick="startSurvey()">탐험 시작하기</button>
             <p style="margin-top:1.2rem; font-size:0.72rem; color:rgba(255,255,255,0.38); line-height:1.7; word-break:keep-all;">
@@ -120,6 +117,7 @@
                 <p id="result-sub" style="display:none; font-size:0.72rem; color:rgba(255,255,255,0.45); margin-top:0.4rem;">화면을 직접 움직이며 은하를 관찰하세요</p>
                 <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                     <button id="restart-btn" class="btn-start" style="margin-top: 1.5rem; pointer-events: all; display: none;" onclick="location.href='index.html'">메인으로 돌아가기</button>
+                    <button id="pdf-btn" class="btn-start" style="margin-top: 1.5rem; pointer-events: all; display: none; background: transparent; border: 1px solid rgba(255,255,255,0.4);" onclick="openReport()">📄 PDF 보고서</button>
                 </div>
             </div>
         </section>

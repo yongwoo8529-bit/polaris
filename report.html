@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>진로성향 검사 결과 보고서 - POLARIS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #e8e8f0;
+            color: #1a1a2e;
+        }
+
+        /* 화면 전용 상단 바 */
+        .screen-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 52px;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 100;
+        }
+        .screen-bar-logo {
+            color: #fff;
+            font-size: 13px;
+            letter-spacing: 3px;
+            font-weight: 700;
+        }
+        .btn-print {
+            background: #4080ff;
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.2s;
+        }
+        .btn-print:hover { opacity: 0.85; }
+
+        /* A4 페이지 */
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 68px auto 40px;
+            background: #fff;
+            box-shadow: 0 6px 40px rgba(0,0,0,0.18);
+            padding: 14mm 18mm 16mm;
+        }
+
+        /* 헤더 */
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-bottom: 6mm;
+            border-bottom: 2.5px solid var(--gc, #4080ff);
+            margin-bottom: 7mm;
+        }
+        .report-logo {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #1a1a2e;
+            line-height: 1;
+        }
+        .report-sub {
+            font-size: 10px;
+            color: #999;
+            margin-top: 5px;
+            letter-spacing: 0.5px;
+        }
+        .report-meta {
+            text-align: right;
+            font-size: 10.5px;
+            color: #999;
+            line-height: 1.8;
+        }
+
+        /* 은하 히어로 */
+        .galaxy-hero {
+            background: var(--gc-light, #f0f4ff);
+            border-left: 5px solid var(--gc, #4080ff);
+            border-radius: 0 10px 10px 0;
+            padding: 5mm 7mm;
+            margin-bottom: 6mm;
+        }
+        .galaxy-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 3px;
+        }
+        .galaxy-tagline {
+            font-size: 12.5px;
+            color: var(--gc-dark, #2060cc);
+            font-weight: 500;
+        }
+
+        /* 파트별 점수 */
+        .scores-section {
+            margin-bottom: 6mm;
+        }
+        .section-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: #aaa;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 3.5mm;
+            padding-bottom: 2mm;
+            border-bottom: 1px solid #eee;
+        }
+        .score-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2.5mm;
+        }
+        .score-label {
+            font-size: 11px;
+            width: 62px;
+            color: #666;
+            flex-shrink: 0;
+        }
+        .score-bar-wrap {
+            flex: 1;
+            height: 5px;
+            background: #f0f0f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .score-bar {
+            height: 100%;
+            border-radius: 3px;
+            background: #e0e0e0;
+        }
+        .score-bar.main {
+            background: var(--gc, #4080ff);
+        }
+        .score-val {
+            font-size: 10.5px;
+            color: #999;
+            width: 28px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        /* 내용 섹션 */
+        .content-section {
+            margin-bottom: 5.5mm;
+        }
+        .content-section p {
+            font-size: 11.5px;
+            color: #333;
+            line-height: 1.85;
+        }
+
+        /* 추천 직업 */
+        .jobs-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 3mm;
+        }
+        .job-tag {
+            font-size: 10.5px;
+            padding: 3px 9px;
+            border-radius: 10px;
+            background: var(--gc-light, #f0f4ff);
+            color: var(--gc-dark, #2060cc);
+            border: 1px solid var(--gc-border, #c0d4ff);
+        }
+
+        /* 하단 */
+        .report-footer {
+            margin-top: 7mm;
+            padding-top: 4mm;
+            border-top: 1px solid #eee;
+            font-size: 9.5px;
+            color: #bbb;
+            line-height: 1.7;
+        }
+
+        /* 오류/로딩 */
+        .state-msg {
+            text-align: center;
+            padding: 40mm 0;
+            color: #aaa;
+            font-size: 14px;
+        }
+        .state-msg a {
+            display: inline-block;
+            margin-top: 16px;
+            color: #4080ff;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        /* 인쇄 */
+        @media print {
+            body { background: #fff; }
+            .screen-bar { display: none; }
+            .page {
+                margin: 0;
+                box-shadow: none;
+                padding: 14mm 18mm;
+                width: 100%;
+                min-height: auto;
+            }
+        }
+        @page { size: A4; margin: 0; }
+    </style>
+</head>
+<body>
+
+<div class="screen-bar">
+    <span class="screen-bar-logo">POLARIS</span>
+    <button class="btn-print" onclick="window.print()">🖨️ 인쇄 / PDF 저장</button>
+</div>
+
+<div class="page" id="page">
+    <div class="state-msg" id="state-msg">결과를 불러오는 중...</div>
+    <div id="report" style="display:none;"></div>
+</div>
+
+<script>
+const COLORS = {
+    1: { gc: '#a55eea', light: '#f7f0ff', border: '#d4aaff', dark: '#7a30c0' },
+    2: { gc: '#45aaf2', light: '#eaf4ff', border: '#a8d8fa', dark: '#1a80d0' },
+    3: { gc: '#fd9644', light: '#fff4eb', border: '#ffd0a0', dark: '#c05800' },
+    4: { gc: '#f7c52e', light: '#fffbe8', border: '#ffe080', dark: '#907000' },
+    5: { gc: '#26de81', light: '#eafff3', border: '#90ecc0', dark: '#0a9050' },
+    6: { gc: '#e05c5c', light: '#fff0f0', border: '#ffb0b0', dark: '#b02020' },
+    7: { gc: '#9090b0', light: '#f4f4f8', border: '#ccccdd', dark: '#505070' },
+    8: { gc: '#5566aa', light: '#eef0ff', border: '#aab0dd', dark: '#334488' },
+};
+
+const PART_LABELS = ['탐구', '질서', '온기', '울림', '울타리', '손길'];
+const MAX_SCORE = 40;
+
+function render() {
+    const raw = localStorage.getItem('polaris_result');
+    if (!raw) {
+        document.getElementById('state-msg').innerHTML =
+            '결과 데이터를 찾을 수 없습니다.<br><a href="polaris.html">검사 먼저 완료하기 →</a>';
+        return;
+    }
+
+    const d = JSON.parse(raw);
+    const c = COLORS[d.maxPart] || COLORS[1];
+    const page = document.getElementById('page');
+    page.style.setProperty('--gc', c.gc);
+    page.style.setProperty('--gc-light', c.light);
+    page.style.setProperty('--gc-border', c.border);
+    page.style.setProperty('--gc-dark', c.dark);
+
+    const date = new Date(d.timestamp).toLocaleDateString('ko-KR', {
+        year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    // 은하 이름에서 이모지 제거
+    const galaxyName = d.name.replace(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{27BF}]/gu, '').trim();
+
+    // 파트별 점수 바
+    let scoresHtml = '';
+    if (d.scores && !d.specialType) {
+        const rows = PART_LABELS.map((label, i) => {
+            const part = i + 1;
+            const score = d.scores[part] || 0;
+            const pct = Math.round((score / MAX_SCORE) * 100);
+            const isMain = part === d.maxPart;
+            return `<div class="score-row">
+                <span class="score-label">${label}</span>
+                <div class="score-bar-wrap">
+                    <div class="score-bar ${isMain ? 'main' : ''}" style="width:${pct}%"></div>
+                </div>
+                <span class="score-val">${score}점</span>
+            </div>`;
+        }).join('');
+        scoresHtml = `<div class="scores-section">
+            <div class="section-title">파트별 점수</div>
+            ${rows}
+        </div>`;
+    }
+
+    // 추천 직업
+    let jobsHtml = '';
+    if (d.jobs) {
+        const jobs = d.jobs.split(',').map(j => j.trim()).filter(Boolean);
+        if (jobs.length > 0) {
+            jobsHtml = `<div class="content-section">
+                <div class="section-title">추천 직업 (${jobs.length}개)</div>
+                <div class="jobs-wrap">
+                    ${jobs.map(j => `<span class="job-tag">${j}</span>`).join('')}
+                </div>
+            </div>`;
+        }
+    }
+
+    document.getElementById('report').innerHTML = `
+        <div class="report-header">
+            <div>
+                <div class="report-logo">POLARIS</div>
+                <div class="report-sub">진로성향 검사 결과 보고서</div>
+            </div>
+            <div class="report-meta">
+                검사일: ${date}<br>
+                홀랜드 직업적성이론(RIASEC) 기반
+            </div>
+        </div>
+
+        <div class="galaxy-hero">
+            <div class="galaxy-name">${galaxyName}</div>
+            <div class="galaxy-tagline">${d.tagline}</div>
+        </div>
+
+        ${scoresHtml}
+
+        <div class="content-section">
+            <div class="section-title">핵심 재능</div>
+            <p>${d.core}</p>
+        </div>
+
+        <div class="content-section">
+            <div class="section-title">빛나는 순간</div>
+            <p>${d.moment}</p>
+        </div>
+
+        ${jobsHtml}
+
+        <div class="report-footer">
+            본 검사는 홀랜드 직업적성이론(Holland Career Codes, RIASEC)을 기반으로 한 자기탐색 도구입니다.
+            직업 정보 출처: 한국직업능력연구원 커리어넷(www.career.go.kr).
+            검사 결과는 참고용이며 개인차가 있을 수 있습니다. &nbsp;|&nbsp; POLARIS © 2026
+        </div>
+    `;
+
+    document.getElementById('state-msg').style.display = 'none';
+    document.getElementById('report').style.display = 'block';
+}
+
+render();
+</script>
+</body>
+</html>

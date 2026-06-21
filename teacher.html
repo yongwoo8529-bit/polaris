@@ -337,7 +337,10 @@ function checkPw() {
 
             <div class="card">
                 <div class="card-title">학생 결과 목록</div>
-                <p style="font-size:12px; color:#aaa; margin-bottom:14px;">📄 PDF 옆에 버튼을 눌러 학생의 결과를 PDF로 확인하세요!</p>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+                    <p style="font-size:12px; color:#aaa; margin:0;">📄 PDF 버튼을 눌러 학생의 결과를 PDF로 확인하세요!</p>
+                    <button onclick="exportCsv()" style="padding:6px 14px; background:#1a6e3c; color:#fff; border:none; border-radius:8px; font-size:12px; font-weight:700; font-family:inherit; cursor:pointer; white-space:nowrap;">📊 Excel 내보내기</button>
+                </div>
                 <table class="result-table">
                     <thead>
                         <tr>
@@ -500,6 +503,24 @@ async function fetchAndRender(code) {
 
     document.getElementById('last-updated').textContent =
         new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+}
+
+window.exportCsv = () => {
+    if (!_rows.length) return
+    const headers = ['이름', '성향 유형', '탐구', '질서', '온기', '울림', '울타리', '손길', '검사일시']
+    const data = _rows.map(r => {
+        const g = GALAXY[r.galaxy_type] || GALAXY[1]
+        const s = r.scores || {}
+        const date = new Date(r.created_at).toLocaleDateString('ko-KR')
+        return [r.student_name, g.name, s[1]||0, s[2]||0, s[3]||0, s[4]||0, s[5]||0, s[6]||0, date]
+    })
+    const csv = [headers, ...data].map(row => row.map(v => `"${v}"`).join(',')).join('\n')
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `POLARIS_${_activeCode}_결과.csv`
+    a.click()
+    URL.revokeObjectURL(a.href)
 }
 
 window.openStudentPdf = (index) => {

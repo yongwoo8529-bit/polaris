@@ -367,7 +367,6 @@ function explodeToGalaxies(specialType) {
         document.getElementById("result-desc").innerText = "은하를 클릭해 당신의 진로를 탐색해보세요";
         document.getElementById("result-sub").style.display = "block";
         document.getElementById("restart-btn").style.display = "inline-block";
-        document.getElementById("pdf-btn").style.display = "inline-block";
 
         gsap.to(document.getElementById("result-ui"), { opacity: 1, duration: 1, delay: 1 });
     }, 2800);
@@ -564,9 +563,6 @@ function showGalaxyDetails(partId) {
 
 function closeModal() { document.getElementById("galaxy-modal").classList.remove("active"); }
 window.closeModal = closeModal;
-
-function openReport() { window.open('report.html', '_blank'); }
-window.openReport = openReport;
 
 // ── 학급 참여 모달 ──
 function openClassModal() {

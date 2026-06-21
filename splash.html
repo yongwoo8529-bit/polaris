@@ -77,21 +77,21 @@
         function type() {
             if (idx < word.length) {
                 typed.textContent += word[idx++];
-                setTimeout(type, 130);
+                setTimeout(type, 210);
             } else {
                 setTimeout(function () {
                     cur.style.display = 'none';
                     sub.style.opacity = '1';
-                }, 250);
+                }, 400);
                 setTimeout(function () {
                     document.body.style.transition = 'opacity 0.75s ease';
                     document.body.style.opacity = '0';
                     setTimeout(function () { location.replace(dest); }, 750);
-                }, 1800);
+                }, 2600);
             }
         }
 
-        setTimeout(type, 350);
+        setTimeout(type, 500);
     </script>
 </body>
 </html>

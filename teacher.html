@@ -283,6 +283,7 @@ function checkPw() {
             <button class="btn-primary" id="create-btn" onclick="createClass()">학급 코드 생성하기</button>
 
             <div class="code-box" id="code-box">
+                <div id="code-status" style="font-size:11px; font-weight:700; letter-spacing:0.5px; margin-bottom:8px;"></div>
                 <div class="code-label">학급 코드</div>
                 <div class="code-value" id="code-display"></div>
                 <div class="code-class" id="code-class"></div>
@@ -403,6 +404,25 @@ window.switchTab = (tab) => {
     if (tab !== 'view' && _refreshTimer) { clearInterval(_refreshTimer); _refreshTimer = null }
 }
 
+function showCodeBox(code, teacher, cls, isExisting) {
+    document.getElementById('code-display').textContent = code
+    document.getElementById('code-class').textContent = `${teacher} 선생님 · ${cls}`
+    const statusEl = document.getElementById('code-status')
+    if (isExisting) {
+        statusEl.textContent = '✅ 이미 만들어진 학급입니다 — 기존 코드를 불러왔습니다.'
+        statusEl.style.color = '#26de81'
+    } else {
+        statusEl.textContent = '🎉 새 학급 코드가 생성되었습니다!'
+        statusEl.style.color = '#4080ff'
+    }
+    document.getElementById('code-box').style.display = 'block'
+    window._lastCode = code
+    const targetUrl = new URL('polaris.html?code=' + code, location.href).href
+    document.getElementById('qr-img').src =
+        'https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=10&data=' + encodeURIComponent(targetUrl)
+    window._qrUrl = targetUrl
+}
+
 window.createClass = async () => {
     const teacher = document.getElementById('teacher-name').value.trim()
     const cls = document.getElementById('class-name').value.trim()
@@ -411,8 +431,22 @@ window.createClass = async () => {
     errEl.textContent = ''
 
     const btn = document.getElementById('create-btn')
-    btn.disabled = true; btn.textContent = '생성 중...'
+    btn.disabled = true; btn.textContent = '확인 중...'
 
+    // 이미 존재하는 학급인지 확인
+    const { data: existing } = await sb.from('classes')
+        .select('code')
+        .eq('teacher_name', teacher)
+        .eq('class_name', cls)
+        .maybeSingle()
+
+    if (existing) {
+        btn.disabled = false; btn.textContent = '학급 코드 생성하기'
+        showCodeBox(existing.code, teacher, cls, true)
+        return
+    }
+
+    // 새 코드 생성
     let code
     for (let i = 0; i < 5; i++) {
         code = genCode()
@@ -425,16 +459,7 @@ window.createClass = async () => {
 
     if (error) { errEl.textContent = '오류가 발생했습니다. 다시 시도해주세요.'; return }
 
-    document.getElementById('code-display').textContent = code
-    document.getElementById('code-class').textContent = `${teacher} 선생님 · ${cls}`
-    document.getElementById('code-box').style.display = 'block'
-    window._lastCode = code
-
-    // QR 코드 생성 (학생 스캔 시 polaris.html?code=XXX 로 이동)
-    const targetUrl = new URL('polaris.html?code=' + code, location.href).href
-    document.getElementById('qr-img').src =
-        'https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=10&data=' + encodeURIComponent(targetUrl)
-    window._qrUrl = targetUrl
+    showCodeBox(code, teacher, cls, false)
 }
 
 window.copyCode = () => {

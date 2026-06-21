@@ -224,7 +224,10 @@
 
 <div class="screen-bar">
     <span class="screen-bar-logo">POLARIS</span>
-    <button class="btn-print" onclick="window.print()">🖨️ 인쇄 / PDF 저장</button>
+    <button class="btn-print" id="btn-print" onclick="window.print()">🖨️ 인쇄 / PDF 저장</button>
+</div>
+<div id="mobile-hint" style="display:none; background:#fffbe8; color:#7a5c00; font-size:12px; text-align:center; padding:8px 16px; border-bottom:1px solid #ffe080;">
+    📱 모바일에서는 브라우저 메뉴 → <strong>공유</strong> 또는 <strong>인쇄</strong>를 선택해 PDF로 저장하세요.
 </div>
 
 <div class="page" id="page">
@@ -349,6 +352,21 @@ function render() {
 }
 
 render();
+
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+if (isMobile) {
+    document.getElementById('mobile-hint').style.display = 'block';
+    document.getElementById('page').style.marginTop = '90px';
+    const btn = document.getElementById('btn-print');
+    btn.textContent = '🖨️ 인쇄/공유';
+    btn.onclick = () => {
+        if (navigator.share) {
+            navigator.share({ title: 'POLARIS 진로 보고서', url: location.href });
+        } else {
+            window.print();
+        }
+    };
+}
 </script>
 </body>
 </html>

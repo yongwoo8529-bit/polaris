@@ -235,6 +235,33 @@
 </head>
 <body>
 
+<!-- 비밀번호 게이트 -->
+<div id="pw-gate" style="position:fixed; inset:0; z-index:9999; background:#1a1a2e; display:flex; align-items:center; justify-content:center; padding:20px;">
+    <div style="text-align:center; width:100%; max-width:280px;">
+        <div style="color:#fff; font-size:13px; letter-spacing:4px; font-weight:900; margin-bottom:4px; font-family:'Courier New',monospace;">POLARIS</div>
+        <div style="color:rgba(255,255,255,0.35); font-size:11px; letter-spacing:1.5px; margin-bottom:32px;">교사 전용</div>
+        <input type="password" id="pw-input" placeholder="비밀번호" autocomplete="off"
+               onkeydown="if(event.key==='Enter') checkPw()"
+               style="width:100%; padding:13px 14px; background:rgba(255,255,255,0.07); border:1.5px solid rgba(255,255,255,0.16); border-radius:10px; color:#fff; font-size:14px; text-align:center; outline:none; font-family:inherit; margin-bottom:8px;">
+        <p id="pw-error" style="color:#e05c5c; font-size:12px; min-height:20px; margin-bottom:8px;"></p>
+        <button onclick="checkPw()" style="width:100%; padding:13px; background:#4080ff; color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:700; font-family:inherit; cursor:pointer;">확인</button>
+    </div>
+</div>
+<script>
+const _PW = 'polaris2026';
+function checkPw() {
+    if (document.getElementById('pw-input').value === _PW) {
+        document.getElementById('pw-gate').style.display = 'none';
+        sessionStorage.setItem('t_auth', '1');
+    } else {
+        document.getElementById('pw-error').textContent = '비밀번호가 맞지 않습니다.';
+        document.getElementById('pw-input').value = '';
+        document.getElementById('pw-input').focus();
+    }
+}
+if (sessionStorage.getItem('t_auth') === '1') document.getElementById('pw-gate').style.display = 'none';
+</script>
+
 <header>
     <span class="logo">POLARIS <span>교사 관리</span></span>
     <a href="index.html">← 홈으로</a>

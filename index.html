@@ -175,8 +175,8 @@
         /* ── PRICING ── */
         .pricing { padding: 60px 0; }
         .price-grid {
-            display: grid; grid-template-columns: repeat(3,1fr);
-            gap: 12px; margin-top: 30px;
+            display: grid; grid-template-columns: repeat(2,1fr);
+            gap: 12px; margin-top: 30px; max-width: 620px; margin-left: auto; margin-right: auto;
         }
         @media (max-width:800px) { .price-grid { grid-template-columns: 1fr; max-width: 340px; margin: 30px auto 0; } }
         .price-card {
@@ -379,21 +379,8 @@
             </div>
             <div class="price-card featured">
                 <div class="price-tier">Standard</div>
-                <div class="price-amount">30만원</div>
-                <div class="price-unit">학교당 / 연 · 학생 무제한</div>
-                <ul class="price-list">
-                    <li>48문항 진로 검사</li>
-                    <li>3D 은하 시각화</li>
-                    <li>6가지 성향 유형</li>
-                    <li>교사 대시보드</li>
-                    <li>PDF 보고서</li>
-                </ul>
-                <a href="#" onclick="copyEmail(event)" class="btn-plan btn-plan-fill">도입 문의하기</a>
-            </div>
-            <div class="price-card">
-                <div class="price-tier">Premium</div>
-                <div class="price-amount">50만원</div>
-                <div class="price-unit">학교당 / 연 · 모든 기능</div>
+                <div class="price-amount">인당 2,000원</div>
+                <div class="price-unit">학교당 / 연 · 최소 150만원 ~ 최대 250만원</div>
                 <ul class="price-list">
                     <li>48문항 진로 검사</li>
                     <li>3D 은하 시각화</li>
@@ -401,7 +388,7 @@
                     <li>교사 대시보드</li>
                     <li>PDF 보고서 + 맞춤 브랜딩</li>
                 </ul>
-                <a href="#" onclick="copyEmail(event)" class="btn-plan btn-plan-ghost">도입 문의하기</a>
+                <a href="#" onclick="copyEmail(event)" class="btn-plan btn-plan-fill">도입 문의하기</a>
             </div>
         </div>
     </div>

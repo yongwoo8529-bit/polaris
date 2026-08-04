@@ -211,10 +211,16 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+        const sb = createClient(
+            'https://ixouybhxjiijtpyhwhjv.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4b3V5Ymh4amlpanRweWh3aGp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NTI0NDYsImV4cCI6MjA5MTEyODQ0Nn0.TTOQNdFFQNW5OKzb4DkKlWuCL8cSw4zP9DmfpojU47o'
+        )
+
         const canvas = document.getElementById('stars-bg'), ctx = canvas.getContext('2d'), signalsList = document.getElementById('signals-list'), filterTabs = document.getElementById('filter-tabs');
         const overlay = document.getElementById('modal-overlay'), openBtn = document.getElementById('open-modal-btn'), submitBtn = document.getElementById('submit-signal-btn'), typeBtns = document.querySelectorAll('.type-btn'), signalInput = document.getElementById('signal-text');
-        
+
         let selectedType = 1;
         const galaxyNames = {1:"탐구의 은하",2:"질서의 은하",3:"온기의 은하",4:"울림의 은하",5:"울타리의 은하",6:"프리즘의 은하",7:"정적의 은하"};
         const galaxyColors = {1:"#a55eea",2:"#45aaf2",3:"#fd9644",4:"#fed330",5:"#26de81",6:"#fff",7:"#2c3e50"};
@@ -229,39 +235,45 @@
             } draw();
         }
 
-        function loadSignals(filter = 'all') {
-            signalsList.innerHTML = '';
-            const allMessages = JSON.parse(localStorage.getItem('polaris_board_messages') || '[]');
-            const filtered = filter === 'all' ? allMessages : allMessages.filter(m => m.type == filter);
-            if(filtered.length === 0) { signalsList.innerHTML = '<div style="text-align:center; padding: 40px; opacity: 0.5;">아직 도착한 신호가 없습니다.</div>'; return; }
+        async function loadSignals(filter = 'all') {
+            signalsList.innerHTML = '<div style="text-align:center; padding: 40px; opacity: 0.5;">불러오는 중...</div>';
+            const p_type = filter === 'all' ? null : parseInt(filter);
+            const { data, error } = await sb.rpc('get_board_messages', { p_type });
 
-            filtered.sort((a,b) => b.time - a.time).forEach(msg => {
-                const isLiked = (sessionStorage.getItem(`liked_${msg.time}`) === 'true');
+            if (error || !data) { signalsList.innerHTML = '<div style="text-align:center; padding: 40px; opacity: 0.5;">신호를 불러오지 못했습니다.</div>'; return; }
+            if (data.length === 0) { signalsList.innerHTML = '<div style="text-align:center; padding: 40px; opacity: 0.5;">아직 도착한 신호가 없습니다.</div>'; return; }
+
+            signalsList.innerHTML = '';
+            data.forEach(msg => {
+                const isLiked = (sessionStorage.getItem(`liked_${msg.id}`) === 'true');
                 const card = document.createElement('div');
-                card.className = 'signal-card'; card.style.borderLeft = `6px solid ${galaxyColors[msg.type] || '#fff'}`;
+                card.className = 'signal-card'; card.style.borderLeft = `6px solid ${galaxyColors[msg.galaxy_type] || '#fff'}`;
                 card.innerHTML = `
                     <div class="signal-header">
-                        <span class="galaxy-name" style="color:${galaxyColors[msg.type]}">${galaxyNames[msg.type]}</span>
-                        <span class="signal-date">${new Date(msg.time).toLocaleDateString()}</span>
+                        <span class="galaxy-name" style="color:${galaxyColors[msg.galaxy_type]}">${galaxyNames[msg.galaxy_type]}</span>
+                        <span class="signal-date">${new Date(msg.created_at).toLocaleDateString()}</span>
                     </div>
-                    <div class="signal-content">${msg.text}</div>
-                    <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="likeMessage(${msg.time})">❤️ <span>${msg.likes || 0}</span></button>
+                    <div class="signal-content"></div>
+                    <button class="like-btn ${isLiked ? 'liked' : ''}" data-id="${msg.id}">❤️ <span>${msg.likes || 0}</span></button>
                 `;
+                card.querySelector('.signal-content').textContent = msg.content;
                 signalsList.appendChild(card);
             });
         }
 
-        window.likeMessage = (time) => {
-            if (sessionStorage.getItem(`liked_${time}`) === 'true') return;
-            const allMessages = JSON.parse(localStorage.getItem('polaris_board_messages') || '[]');
-            const msg = allMessages.find(m => m.time === time);
-            if (msg) {
-                msg.likes = (msg.likes || 0) + 1;
-                localStorage.setItem('polaris_board_messages', JSON.stringify(allMessages));
-                sessionStorage.setItem(`liked_${time}`, 'true');
-                loadSignals(document.querySelector('.tab-btn.active').dataset.id);
-            }
-        };
+        async function likeMessage(id, btn) {
+            if (sessionStorage.getItem(`liked_${id}`) === 'true') return;
+            btn.classList.add('liked');
+            const { data: newLikes, error } = await sb.rpc('like_board_message', { p_id: id });
+            if (error) { btn.classList.remove('liked'); return; }
+            sessionStorage.setItem(`liked_${id}`, 'true');
+            btn.querySelector('span').textContent = newLikes;
+        }
+
+        signalsList.addEventListener('click', (e) => {
+            const btn = e.target.closest('.like-btn');
+            if (btn && !btn.classList.contains('liked')) likeMessage(btn.dataset.id, btn);
+        });
 
         openBtn.onclick = () => overlay.classList.add('active');
         typeBtns.forEach(btn => {
@@ -269,11 +281,12 @@
         });
         document.querySelector('.type-btn[data-type="1"]').click();
 
-        submitBtn.onclick = () => {
+        submitBtn.onclick = async () => {
             const text = signalInput.value.trim(); if(!text) return;
-            const allMessages = JSON.parse(localStorage.getItem('polaris_board_messages') || '[]');
-            allMessages.push({ type: selectedType, text: text, time: Date.now(), likes: 0 });
-            localStorage.setItem('polaris_board_messages', JSON.stringify(allMessages));
+            submitBtn.disabled = true; submitBtn.textContent = '전송 중...';
+            const { error } = await sb.rpc('post_board_message', { p_type: selectedType, p_content: text });
+            submitBtn.disabled = false; submitBtn.textContent = '신호 발송';
+            if (error) { alert('신호 발송에 실패했습니다. 잠시 후 다시 시도해주세요.'); return; }
             signalInput.value = ''; overlay.classList.remove('active');
             loadSignals(document.querySelector('.tab-btn.active').dataset.id);
         };

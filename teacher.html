@@ -235,41 +235,34 @@
 </head>
 <body>
 
-<!-- 비밀번호 게이트 -->
-<div id="pw-gate" style="position:fixed; inset:0; z-index:9999; background:#1a1a2e; display:flex; align-items:center; justify-content:center; padding:20px;">
-    <div style="text-align:center; width:100%; max-width:280px;">
+<!-- 로그인 게이트 -->
+<div id="login-gate" style="position:fixed; inset:0; z-index:9999; background:#1a1a2e; display:flex; align-items:center; justify-content:center; padding:20px;">
+    <div style="text-align:center; width:100%; max-width:300px;">
         <div style="color:#fff; font-size:13px; letter-spacing:4px; font-weight:900; margin-bottom:4px; font-family:'Courier New',monospace;">POLARIS</div>
         <div style="color:rgba(255,255,255,0.35); font-size:11px; letter-spacing:1.5px; margin-bottom:32px;">교사 전용</div>
-        <input type="password" id="pw-input" placeholder="비밀번호" autocomplete="off"
-               onkeydown="if(event.key==='Enter') checkPw()"
+        <input type="email" id="login-email" placeholder="이메일" autocomplete="username"
                style="width:100%; padding:13px 14px; background:rgba(255,255,255,0.07); border:1.5px solid rgba(255,255,255,0.16); border-radius:10px; color:#fff; font-size:14px; text-align:center; outline:none; font-family:inherit; margin-bottom:8px;">
-        <p id="pw-error" style="color:#e05c5c; font-size:12px; min-height:20px; margin-bottom:8px;"></p>
-        <button onclick="checkPw()" style="width:100%; padding:13px; background:#4080ff; color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:700; font-family:inherit; cursor:pointer;">확인</button>
+        <input type="password" id="login-password" placeholder="비밀번호" autocomplete="current-password"
+               onkeydown="if(event.key==='Enter') doLogin()"
+               style="width:100%; padding:13px 14px; background:rgba(255,255,255,0.07); border:1.5px solid rgba(255,255,255,0.16); border-radius:10px; color:#fff; font-size:14px; text-align:center; outline:none; font-family:inherit; margin-bottom:8px;">
+        <p id="login-error" style="color:#e05c5c; font-size:12px; min-height:20px; margin-bottom:8px;"></p>
+        <button id="login-btn" onclick="doLogin()" style="width:100%; padding:13px; background:#4080ff; color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:700; font-family:inherit; cursor:pointer;">로그인</button>
+        <p style="color:rgba(255,255,255,0.3); font-size:11px; margin-top:16px; line-height:1.6;">계정이 없으신가요?<br>관리자에게 문의해 발급받으세요.</p>
     </div>
 </div>
-<script>
-const _PW = 'polaris2026';
-function checkPw() {
-    if (document.getElementById('pw-input').value === _PW) {
-        document.getElementById('pw-gate').style.display = 'none';
-    } else {
-        document.getElementById('pw-error').textContent = '비밀번호가 맞지 않습니다.';
-        document.getElementById('pw-input').value = '';
-        document.getElementById('pw-input').focus();
-    }
-}
-</script>
 
 <header>
     <span class="logo">POLARIS <span>교사 관리</span></span>
     <div style="display:flex; gap:12px; align-items:center;">
+        <span id="header-email" style="font-size:12px; color:rgba(255,255,255,0.4);"></span>
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSfxP0CCbhAR3pHnpJ0FBlrJMskP7MnY3ESV936_vSg3h2bEyA/viewform?usp=header" target="_blank" style="font-size:12px; color:rgba(255,255,255,0.5); text-decoration:none;">📝 수업 후기</a>
         <a href="manual.html" target="_blank" style="font-size:12px; color:rgba(255,255,255,0.5); text-decoration:none;">📋 매뉴얼</a>
+        <a href="#" id="logout-link" style="font-size:12px; color:rgba(255,255,255,0.5); text-decoration:none;">로그아웃</a>
         <a href="index.html">← 홈으로</a>
     </div>
 </header>
 
-<main>
+<main id="app-main" style="display:none;">
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('create')">학급 코드 발급</button>
         <button class="tab-btn" onclick="switchTab('view')">결과 조회</button>
@@ -309,20 +302,13 @@ function checkPw() {
 
     <!-- 결과 조회 -->
     <div id="tab-view" class="tab-panel">
-        <div class="card">
-            <div class="card-title">학급 결과 조회</div>
-            <label>학급 코드</label>
-            <div class="search-row">
-                <input type="text" id="view-code" placeholder="예: ABC123" maxlength="6"
-                       style="text-transform:uppercase;"
-                       oninput="this.value=this.value.toUpperCase()"
-                       onkeydown="if(event.key==='Enter') loadResults()">
-                <button class="btn-search" onclick="loadResults()">조회</button>
-            </div>
-            <p id="view-error" class="error-msg"></p>
+        <div class="card" id="my-classes-card">
+            <div class="card-title">내 학급 목록</div>
+            <div id="my-classes-list"></div>
         </div>
 
         <div class="results-area" id="results-area">
+            <button onclick="backToClassList()" style="background:none; border:none; color:#4080ff; font-size:13px; font-weight:700; cursor:pointer; padding:0; margin-bottom:14px;">← 목록으로</button>
             <div class="class-bar">
                 <div>
                     <div class="cb-name" id="cb-name"></div>
@@ -403,6 +389,108 @@ window.switchTab = (tab) => {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'))
     document.getElementById('tab-' + tab).classList.add('active')
     if (tab !== 'view' && _refreshTimer) { clearInterval(_refreshTimer); _refreshTimer = null }
+    if (tab === 'view') {
+        document.getElementById('results-area').style.display = 'none'
+        document.getElementById('my-classes-card').style.display = 'block'
+        loadMyClasses()
+    }
+}
+
+// ── 로그인 ──
+function updateAuthUI(session) {
+    const gate = document.getElementById('login-gate')
+    const main = document.getElementById('app-main')
+    if (session) {
+        gate.style.display = 'none'
+        main.style.display = 'block'
+        document.getElementById('header-email').textContent = session.user.email
+        loadMyClasses()
+    } else {
+        gate.style.display = 'flex'
+        main.style.display = 'none'
+        if (_refreshTimer) { clearInterval(_refreshTimer); _refreshTimer = null }
+    }
+}
+
+window.doLogin = async () => {
+    const email = document.getElementById('login-email').value.trim()
+    const password = document.getElementById('login-password').value
+    const errEl = document.getElementById('login-error')
+    if (!email || !password) { errEl.textContent = '이메일과 비밀번호를 입력해주세요.'; return }
+    errEl.textContent = ''
+
+    const btn = document.getElementById('login-btn')
+    btn.disabled = true; btn.textContent = '로그인 중...'
+    const { error } = await sb.auth.signInWithPassword({ email, password })
+    btn.disabled = false; btn.textContent = '로그인'
+
+    if (error) { errEl.textContent = '이메일 또는 비밀번호가 올바르지 않습니다.'; return }
+}
+
+document.getElementById('logout-link').onclick = async (e) => {
+    e.preventDefault()
+    await sb.auth.signOut()
+}
+
+sb.auth.onAuthStateChange((_event, session) => updateAuthUI(session))
+
+// ── 내 학급 목록 ──
+async function loadMyClasses() {
+    const listEl = document.getElementById('my-classes-list')
+    listEl.innerHTML = '<div class="loading">불러오는 중...</div>'
+
+    const { data, error } = await sb.rpc('get_my_classes')
+    if (error) { listEl.innerHTML = '<div class="error-msg">학급 목록을 불러오지 못했습니다.</div>'; return }
+    if (!data || !data.length) { listEl.innerHTML = '<div class="empty-msg">아직 만든 학급이 없습니다.<br>"학급 코드 발급" 탭에서 새로 만들어보세요.</div>'; return }
+
+    listEl.innerHTML = ''
+    data.forEach(c => {
+        const row = document.createElement('div')
+        row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border:1px solid #f0f0f8; border-radius:12px; margin-bottom:10px; cursor:pointer;'
+
+        const left = document.createElement('div')
+        const title = document.createElement('div')
+        title.style.cssText = 'font-weight:700; font-size:14px;'
+        title.textContent = c.class_name
+        const sub = document.createElement('div')
+        sub.style.cssText = 'font-size:12px; color:#999; margin-top:2px;'
+        sub.textContent = `${c.school_name} · ${c.teacher_name} 선생님 · ${c.code}`
+        left.appendChild(title); left.appendChild(sub)
+
+        const right = document.createElement('div')
+        right.style.cssText = 'text-align:right;'
+        const count = document.createElement('div')
+        count.style.cssText = 'font-weight:900; font-size:18px;'
+        count.textContent = c.student_count
+        const label = document.createElement('div')
+        label.style.cssText = 'font-size:10px; color:#bbb;'
+        label.textContent = '명 참여'
+        right.appendChild(count); right.appendChild(label)
+
+        row.appendChild(left); row.appendChild(right)
+        row.onclick = () => viewClass(c.code, c.class_name, c.teacher_name)
+        listEl.appendChild(row)
+    })
+}
+
+window.viewClass = async (code, className, teacherName) => {
+    document.getElementById('cb-name').textContent = className
+    document.getElementById('cb-teacher').textContent = teacherName + ' 선생님'
+    document.getElementById('my-classes-card').style.display = 'none'
+    document.getElementById('results-area').style.display = 'block'
+
+    _activeCode = code
+    await fetchAndRender(code)
+
+    if (_refreshTimer) clearInterval(_refreshTimer)
+    _refreshTimer = setInterval(() => fetchAndRender(_activeCode), 10000)
+}
+
+window.backToClassList = () => {
+    if (_refreshTimer) { clearInterval(_refreshTimer); _refreshTimer = null }
+    document.getElementById('results-area').style.display = 'none'
+    document.getElementById('my-classes-card').style.display = 'block'
+    loadMyClasses()
 }
 
 function showCodeBox(code, school, teacher, cls, isExisting) {
@@ -442,6 +530,7 @@ window.createClass = async () => {
 
     const row = data[0]
     showCodeBox(row.code, school, teacher, cls, !row.is_new)
+    loadMyClasses()
 }
 
 window.copyCode = () => {
@@ -559,26 +648,6 @@ window.openStudentPdf = (index) => {
     window.open(new URL('report.html?mode=teacher', location.href).href, '_blank')
 }
 
-window.loadResults = async () => {
-    const code = document.getElementById('view-code').value.trim().toUpperCase()
-    const errEl = document.getElementById('view-error')
-    if (code.length < 6) { errEl.textContent = '6자리 학급 코드를 입력해주세요.'; return }
-    errEl.textContent = '조회 중...'
-
-    const { data: cls, error: clsErr } = await sb.rpc('get_class_by_code', { p_code: code })
-    if (clsErr || !cls || !cls.length) { errEl.textContent = '존재하지 않는 학급 코드입니다.'; return }
-    errEl.textContent = ''
-
-    document.getElementById('cb-name').textContent = cls[0].class_name
-    document.getElementById('cb-teacher').textContent = cls[0].teacher_name + ' 선생님'
-    document.getElementById('results-area').style.display = 'block'
-
-    _activeCode = code
-    await fetchAndRender(code)
-
-    if (_refreshTimer) clearInterval(_refreshTimer)
-    _refreshTimer = setInterval(() => fetchAndRender(_activeCode), 10000)
-}
 </script>
 </body>
 </html>

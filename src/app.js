@@ -603,8 +603,8 @@ async function joinClassAndStart() {
     const errEl = document.getElementById('modal-error');
     if (!code || !name) { errEl.textContent = '코드와 이름을 모두 입력해주세요.'; return; }
     errEl.textContent = '코드 확인 중...';
-    const { data, error } = await _sb.from('classes').select('class_name').eq('code', code).maybeSingle();
-    if (error || !data) { errEl.textContent = '유효하지 않은 학급 코드입니다.'; return; }
+    const { data, error } = await _sb.rpc('get_class_by_code', { p_code: code });
+    if (error || !data || !data.length) { errEl.textContent = '유효하지 않은 학급 코드입니다.'; return; }
     sessionStorage.setItem('polaris_class', JSON.stringify({ code, name }));
     document.getElementById('class-modal').style.display = 'none';
     startSurvey();
@@ -622,13 +622,13 @@ async function saveToClass(detail, maxPart) {
     const session = JSON.parse(sessionStorage.getItem('polaris_class') || 'null');
     if (!session) return;
     const galaxyName = detail.name.replace(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{27BF}]/gu, '').trim();
-    await _sb.from('student_results').upsert({
-        class_code: session.code,
-        student_name: session.name,
-        galaxy_type: maxPart,
-        galaxy_name: galaxyName,
-        scores: { ...scores }
-    }, { onConflict: 'class_code,student_name' });
+    await _sb.rpc('submit_result', {
+        p_code: session.code,
+        p_name: session.name,
+        p_galaxy_type: maxPart,
+        p_galaxy_name: galaxyName,
+        p_scores: { ...scores }
+    });
 }
 
 function initStars() {

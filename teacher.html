@@ -394,11 +394,6 @@ const DETAILS = {
     8: { tagline: '지금 방향을 찾는 중 — 정해지지 않은 것이 가능성', core: '현재 자신의 방향성을 깊이 성찰하는 단계에 있습니다. 외부의 기준보다 내면의 기준을 중시하는 성향이 강하며, 쉽게 흔들리지 않는 독립적인 판단력을 지니고 있습니다.', moment: '외부의 평가에 흔들리지 않고 스스로의 기준으로 선택을 내릴 때, 또는 타인이 지나쳤던 깊은 통찰을 발견했을 때 자신만의 가치를 확인합니다.', jobs: '' },
 }
 
-function genCode() {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-    return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
-}
-
 let _refreshTimer = null
 let _activeCode = null
 let _rows = []
@@ -440,34 +435,13 @@ window.createClass = async () => {
     const btn = document.getElementById('create-btn')
     btn.disabled = true; btn.textContent = '확인 중...'
 
-    // 학교 + 선생님 + 학급 셋 다 일치하면 기존 코드 불러오기
-    const { data: existing } = await sb.from('classes')
-        .select('code')
-        .eq('school_name', school)
-        .eq('teacher_name', teacher)
-        .eq('class_name', cls)
-        .maybeSingle()
-
-    if (existing) {
-        btn.disabled = false; btn.textContent = '학급 코드 생성하기'
-        showCodeBox(existing.code, school, teacher, cls, true)
-        return
-    }
-
-    // 하나라도 다르면 새 코드 생성
-    let code
-    for (let i = 0; i < 5; i++) {
-        code = genCode()
-        const { data } = await sb.from('classes').select('code').eq('code', code).maybeSingle()
-        if (!data) break
-    }
-
-    const { error } = await sb.from('classes').insert({ code, school_name: school, teacher_name: teacher, class_name: cls })
+    const { data, error } = await sb.rpc('create_class', { p_school: school, p_teacher: teacher, p_class: cls })
     btn.disabled = false; btn.textContent = '학급 코드 생성하기'
 
-    if (error) { errEl.textContent = '오류가 발생했습니다. 다시 시도해주세요.'; return }
+    if (error || !data || !data.length) { errEl.textContent = '오류가 발생했습니다. 다시 시도해주세요.'; return }
 
-    showCodeBox(code, school, teacher, cls, false)
+    const row = data[0]
+    showCodeBox(row.code, school, teacher, cls, !row.is_new)
 }
 
 window.copyCode = () => {
@@ -495,8 +469,7 @@ window.printQr = () => {
 }
 
 async function fetchAndRender(code) {
-    const { data: rows, error } = await sb.from('student_results')
-        .select('*').eq('class_code', code).order('created_at', { ascending: false })
+    const { data: rows, error } = await sb.rpc('get_student_results', { p_code: code })
     if (error || !rows) return
 
     document.getElementById('cb-count').textContent = rows.length
@@ -543,7 +516,7 @@ async function fetchAndRender(code) {
 
 window.deleteStudent = async (id) => {
     if (!confirm('이 학생의 결과를 삭제하시겠습니까?')) return
-    const { error } = await sb.from('student_results').delete().eq('id', id)
+    const { error } = await sb.rpc('delete_result', { p_code: _activeCode, p_id: id })
     if (error) { alert('삭제 중 오류가 발생했습니다.'); return }
     await fetchAndRender(_activeCode)
 }
@@ -592,12 +565,12 @@ window.loadResults = async () => {
     if (code.length < 6) { errEl.textContent = '6자리 학급 코드를 입력해주세요.'; return }
     errEl.textContent = '조회 중...'
 
-    const { data: cls, error: clsErr } = await sb.from('classes').select('*').eq('code', code).maybeSingle()
-    if (clsErr || !cls) { errEl.textContent = '존재하지 않는 학급 코드입니다.'; return }
+    const { data: cls, error: clsErr } = await sb.rpc('get_class_by_code', { p_code: code })
+    if (clsErr || !cls || !cls.length) { errEl.textContent = '존재하지 않는 학급 코드입니다.'; return }
     errEl.textContent = ''
 
-    document.getElementById('cb-name').textContent = cls.class_name
-    document.getElementById('cb-teacher').textContent = cls.teacher_name + ' 선생님'
+    document.getElementById('cb-name').textContent = cls[0].class_name
+    document.getElementById('cb-teacher').textContent = cls[0].teacher_name + ' 선생님'
     document.getElementById('results-area').style.display = 'block'
 
     _activeCode = code

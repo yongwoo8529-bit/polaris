@@ -364,7 +364,7 @@ function explodeToGalaxies(specialType) {
 
         // 하단 UI — 기존 타이틀 숨기고 설명만
         document.getElementById("result-title").style.display = "none";
-        document.getElementById("result-desc").innerText = "✨ 은하를 클릭해~~";
+        document.getElementById("result-desc").innerText = "은하 가운데를 클릭해 설명을 읽어보세요";
         document.getElementById("result-sub").style.display = "block";
         document.getElementById("restart-btn").style.display = "inline-block";
 
